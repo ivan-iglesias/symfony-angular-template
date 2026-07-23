@@ -10,6 +10,7 @@ enum BusinessErrorCode: string
     case AUTH_USER_NOT_FOUND = 'AUTH_USER_NOT_FOUND';
     case AUTH_USER_ALREADY_EXISTS = 'AUTH_USER_ALREADY_EXISTS';
     case AUTH_USER_INACTIVE = 'AUTH_USER_INACTIVE';
+    case RESOURCE_LOCKED = 'RESOURCE_LOCKED';
 
     public function defaultMessage(): string
     {
@@ -20,6 +21,7 @@ enum BusinessErrorCode: string
             self::AUTH_USER_NOT_FOUND => 'Usuario no encontrado.',
             self::AUTH_USER_ALREADY_EXISTS => 'Email ya registrado en el sistema.',
             self::AUTH_USER_INACTIVE => 'La cuenta de usuario no está activa.',
+            self::RESOURCE_LOCKED => 'La solicitud ya se está procesando en otra sesión.',
         };
     }
 
@@ -37,8 +39,11 @@ enum BusinessErrorCode: string
             // 404 Not Found: Recurso no encontrado.
             self::AUTH_USER_NOT_FOUND => 404,
 
-            // 409 Conflict: Cuando intentas crear algo que ya existe (el email).
+            // 409 Conflict: Cuando intentas crear algo que ya existe.
             self::AUTH_USER_ALREADY_EXISTS => 409,
+
+            // 423 Locked: Recurso bloqueado.
+            self::RESOURCE_LOCKED => 423,
         };
     }
 }

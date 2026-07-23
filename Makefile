@@ -2,7 +2,7 @@ PROJECT_NAME := $(shell grep PROJECT_NAME .env | cut -d '=' -f 2)
 COMPOSE := docker compose -p $(PROJECT_NAME) -f docker-compose.yml
 PHP_EXEC := docker exec -it $(PROJECT_NAME)_php
 
-.PHONY: build up down start stop ps logs goto db-reset db-refresh db-diff db-validate test test-unit test-it
+.PHONY: build up down start stop ps logs goto redis-cli db-reset db-refresh db-diff db-validate test test-unit test-it help
 
 ## --- DOCKER CONTROL ---
 build:
@@ -27,12 +27,15 @@ ps:
 	@$(COMPOSE) ps -a
 
 logs:
-	@read -p "Service name (php, nginx, database): " SERVICE; \
+	@read -p "Service name (php, nginx, database, redis): " SERVICE; \
 	$(COMPOSE) logs -f $$SERVICE
 
 goto:
-	@read -p "Service name (php, nginx, database): " SERVICE; \
+	@read -p "Service name (php, nginx, database, redis): " SERVICE; \
 	docker exec -it $(PROJECT_NAME)_$$SERVICE sh
+
+redis-cli:
+	docker exec -it $(PROJECT_NAME)_redis redis-cli
 
 ## --- DATABASE & DOCTRINE ---
 db-reset: ## Hard reset de la base de datos
@@ -62,7 +65,7 @@ test-it: ## Ejecuta solo los tests de integración
 	$(PHP_EXEC) vendor/bin/phpunit --testsuite Integration
 
 ## --- HELP ---
-help:
+help: ## Muestra esta lista de comandos disponibles
 	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-15s\033[0m %s\n", $$1, $$2}'
 
 # Evitar que make procese argumentos desconocidos

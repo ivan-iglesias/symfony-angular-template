@@ -11,6 +11,14 @@ services:
     volumes:
       - db-data:/var/lib/postgresql/data
 
+  redis:
+      image: redis:7-alpine
+      container_name: ${PROJECT_NAME}_redis
+      ports:
+        - "6379:6379" # Opcional: solo si quieres conectarte a Redis desde tu máquina local (ej. con Redis Insight)
+      volumes:
+        - redis-data:/data
+
   php:
       build:
         context: .
@@ -22,7 +30,7 @@ services:
       volumes:
         - ./backend:/var/www/html
       environment:
-        DATABASE_URL: "postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@database:5432/${POSTGRES_DB}?serverVersion=16&charset=utf8"
+        # DATABASE_URL: "postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@database:5432/${POSTGRES_DB}?serverVersion=16&charset=utf8"
         TZ: Europe/Madrid # Configura la zona horaria a nivel de sistema operativo
       depends_on:
         - database
@@ -47,3 +55,4 @@ services:
 
 volumes:
   db-data:
+  redis-data:

@@ -29,6 +29,7 @@ Una vez levantados los entornos, estos son los puntos de acceso locales:
 | **Frontend**        | [http://localhost:4200](http://localhost:4200)                   | `4200` | Angular                                          |
 | **Front > Backend** | [http://localhost:4200/api/test](http://localhost:4200/api/test) | `4200` | Symfony API                                      |
 | **Backend**         | [http://localhost:8080](http://localhost:8080)                   | `8080` | Symfony API                                      |
+| **Swagger**         | [http://localhost:8080/api/doc](http://localhost:8080/api/doc)   | `8080` | Swagger                                          |
 | **Mailpit**         | [http://localhost:8025](http://localhost:8025)                   | `8025` | Panel de control de correos (Entorno de pruebas) |
 | **Base de Datos**   | `localhost`                                                      | `5432` | PostgreSQL (DBeaver)                             |
 

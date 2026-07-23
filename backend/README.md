@@ -53,6 +53,12 @@ composer require symfony/uid
 composer require symfony/rate-limiter
 ```
 
+#### symfony/lock
+
+```sh
+composer require symfony/lock
+```
+
 #### psr/log
 
 PSR significa PHP Standard Recommendation. Este paquete define una interfaz común para que todos los sistemas de logging (como Monolog, que viene con Symfony) hablen el mismo idioma.

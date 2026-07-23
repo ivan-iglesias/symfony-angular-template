@@ -5,13 +5,16 @@ ARG USER_ID=1000
 ARG GROUP_ID=1000
 
 # Instalación de dependencias del sistema
+# - shadow nos permite usar usermod/groupmod.
+# - $PHPIZE_DEPS temporalmente para poder compilar extensiones de PECL
 RUN apk add --no-cache \
     icu-dev \
     libpq-dev \
     git \
     unzip \
     tzdata \
-    shadow # 'shadow' nos permite usar usermod y groupmod en alpine
+    shadow \
+    $PHPIZE_DEPS
 
 # Configuramos la zona horaria a nivel de sistema y PHP
 ENV TZ=Europe/Madrid
@@ -21,6 +24,9 @@ RUN echo "date.timezone = Europe/Madrid" > /usr/local/etc/php/conf.d/00-docker-p
 
 # Instalamos extensiones de PHP
 RUN docker-php-ext-install intl pdo pdo_pgsql
+
+# Instalamos y habilitamos la extensión de Redis vía PECL
+RUN pecl install redis && docker-php-ext-enable redis
 
 # Creamos un usuario con el mismo ID que tu usuario local
 # Esto evita que los archivos creados pertenezcan a root
