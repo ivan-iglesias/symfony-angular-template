@@ -16,14 +16,14 @@ class LoginActionTest extends TestCase
 
         $authServiceMock->expects($this->once())
             ->method('authenticate')
-            ->with('admin@esku.com', 'password123')
+            ->with('admin@acme.com', 'password123')
             ->willReturn('fake_token_jwt_123');
 
         $controller = new LoginAction($authServiceMock);
 
         // 3. SIMULAMOS LA PETICIÓN (Request)
         $request = new Request([], [], [], [], [], [], json_encode([
-            'email' => 'admin@esku.com',
+            'email' => 'admin@acme.com',
             'password' => 'password123'
         ]));
 

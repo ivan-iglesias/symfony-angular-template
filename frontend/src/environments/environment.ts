@@ -5,5 +5,5 @@ export const environment = {
   encryptStorage: true,
   cryptoKey: 'PROD_v1_SUPER_SECURE_KEY_X9Z',
   logLevel: LogLevel.ERROR,
-  apiUrl: 'https://api.esku-logistics.com'
+  apiUrl: 'https://api.acme.com'
 };

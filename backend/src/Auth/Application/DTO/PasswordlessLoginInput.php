@@ -9,7 +9,7 @@ class PasswordlessLoginInput
 {
     #[Assert\NotBlank(message: "El email no puede estar vacío.")]
     #[Assert\Email(message: "El formato del email no es válido.")]
-    #[OA\Property(description: 'Email del usuario', example: 'admin@esku.com')]
+    #[OA\Property(description: 'Email del usuario', example: 'admin@acme.com')]
     public string $email;
 
     public function __construct(array $data)

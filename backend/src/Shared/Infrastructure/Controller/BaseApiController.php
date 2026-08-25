@@ -51,7 +51,7 @@ abstract class BaseApiController extends AbstractController
     }
 
     /**
-     * El "corazón" que captura las excepciones en un solo sitio
+     * Captura las excepciones en un solo sitio
      */
     private function runSafe(callable $action): JsonResponse
     {

@@ -12,7 +12,7 @@ class SymfonyEmailSender
     public function sendTemplate(string $to, string $subject, string $template, array $context): void
     {
         $email = (new TemplatedEmail())
-            ->from('noreply@eskulogistics.com')
+            ->from('noreply@acme.com')
             ->to($to)
             ->subject($subject)
             ->htmlTemplate($template)

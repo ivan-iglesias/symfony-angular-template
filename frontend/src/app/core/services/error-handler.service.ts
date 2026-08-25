@@ -16,7 +16,7 @@ export class ErrorHandlerService {
 
     const messages: Record<string, string> = {
       INVALID_CREDENTIALS: 'Credenciales incorrectas.',
-      ACCOUNT_DISABLED: 'Tu cuenta de Esku ha sido desactivada. Contacta con soporte.',
+      ACCOUNT_DISABLED: 'Tu cuenta de Acme ha sido desactivada. Contacta con soporte.',
       ESTABLISHMENT_LOCKED: 'Este establecimiento está bloqueado. Sube de plan para acceder.',
       INSUFFICIENT_STOCK: 'No hay stock suficiente para realizar esta operación.',
       PLAN_LIMIT_REACHED: 'Has alcanzado el límite de tu plan. ¿Quieres subir de nivel?',

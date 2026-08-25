@@ -21,15 +21,15 @@ class UserFixtures extends Fixture
     {
         $usersData = [
             [
-                'email' => 'admin@esku.com',
+                'email' => 'admin@acme.com',
                 'password' => 'admin123',
                 'roles' => ['ROLE_ADMIN'],
                 'name' => 'Admin',
-                'lastName' => 'Esku',
+                'lastName' => 'Acme',
                 'active' => true
             ],
             [
-                'email' => 'warehouse@esku.com',
+                'email' => 'warehouse@acme.com',
                 'password' => 'warehouse123',
                 'roles' => ['ROLE_MANAGER'],
                 'name' => 'Jefe',
@@ -37,7 +37,7 @@ class UserFixtures extends Fixture
                 'active' => true
             ],
             [
-                'email' => 'driver@esku.com',
+                'email' => 'driver@acme.com',
                 'password' => 'driver123',
                 'roles' => ['ROLE_USER'],
                 'name' => 'Conductor',
@@ -45,7 +45,7 @@ class UserFixtures extends Fixture
                 'active' => true
             ],
             [
-                'email' => 'disabled@esku.com',
+                'email' => 'disabled@acme.com',
                 'password' => 'disabled123',
                 'roles' => ['ROLE_USER'],
                 'name' => 'Usuario',

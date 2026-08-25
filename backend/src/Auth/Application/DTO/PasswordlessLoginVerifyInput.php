@@ -9,7 +9,7 @@ class PasswordlessLoginVerifyInput
 {
     #[Assert\NotBlank(message: "El email es obligatorio")]
     #[Assert\Email(message: "El formato del email no es válido")]
-    #[OA\Property(description: 'Email del usuario', example: 'admin@esku.com')]
+    #[OA\Property(description: 'Email del usuario', example: 'admin@acme.com')]
     public string $email;
 
     #[Assert\NotBlank(message: "El código es obligatorio")]

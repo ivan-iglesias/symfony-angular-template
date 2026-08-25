@@ -31,7 +31,7 @@ import {
 
 const isDev = !environment.production;
 
-// 1. Define tu paleta de colores de marca (Esku Green)
+// 1. Define tu paleta de colores de marca
 const customPreset = definePreset(Aura, {
   semantic: {
     primary: {

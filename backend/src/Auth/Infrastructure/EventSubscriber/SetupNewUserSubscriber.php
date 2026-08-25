@@ -39,7 +39,7 @@ class SetupNewUserSubscriber implements EventSubscriberInterface
 
         $this->tokenRepository->save($securityToken);
 
-        $url = "https://esku-logistics.com/confirm?token=" . $tokenValue;
+        $url = "https://acme.com/confirm?token=" . $tokenValue;
         $this->emailService->sendConfirmationLink($user, $url);
     }
 }

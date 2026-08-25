@@ -17,7 +17,7 @@ class LoginTest extends WebTestCase
             [],
             ['CONTENT_TYPE' => 'application/json'],
             json_encode([
-                'email' => 'admin@esku.com',
+                'email' => 'admin@acme.com',
                 'password' => 'admin123'
             ])
         );
@@ -39,7 +39,7 @@ class LoginTest extends WebTestCase
             [],
             [],
             ['CONTENT_TYPE' => 'application/json'],
-            json_encode(['email' => 'admin@esku.com', 'password' => 'wrong-password'])
+            json_encode(['email' => 'admin@acme.com', 'password' => 'wrong-password'])
         );
 
         $this->assertResponseStatusCodeSame(401);

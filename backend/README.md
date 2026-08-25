@@ -135,6 +135,6 @@ php bin/console doctrine:database:create --env=test
 # Crear las tablas
 php bin/console doctrine:migrations:migrate --env=test --no-interaction
 
-# Cargar tus usuarios (admin@esku.com, etc.)
+# Cargar tus usuarios (admin@acme.com, etc.)
 php bin/console doctrine:fixtures:load --env=test --no-interaction
 ```

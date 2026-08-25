@@ -6,7 +6,7 @@
   },
   "newProjectRoot": "projects",
   "projects": {
-    "esku": {
+    "acme": {
       "projectType": "application",
       "schematics": {
         "@schematics/angular:component": {
@@ -68,10 +68,10 @@
           "builder": "@angular/build:dev-server",
           "configurations": {
             "production": {
-              "buildTarget": "esku:build:production"
+              "buildTarget": "acme:build:production"
             },
             "development": {
-              "buildTarget": "esku:build:development"
+              "buildTarget": "acme:build:development"
             }
           },
           "defaultConfiguration": "development",

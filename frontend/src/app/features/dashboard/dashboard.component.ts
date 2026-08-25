@@ -6,7 +6,7 @@ import { AuthService } from '../../core/services/auth-service';
   template: `
     <div class="dashboard">
       <header>
-        <h1>Esku - Gestión de Almacén</h1>
+        <h1>Acme</h1>
         <span>Operario: {{ username() }}</span>
       </header>
       <main>
