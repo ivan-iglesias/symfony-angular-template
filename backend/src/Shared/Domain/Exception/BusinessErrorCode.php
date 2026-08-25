@@ -11,6 +11,8 @@ enum BusinessErrorCode: string
     case AUTH_USER_ALREADY_EXISTS = 'AUTH_USER_ALREADY_EXISTS';
     case AUTH_USER_INACTIVE = 'AUTH_USER_INACTIVE';
     case RESOURCE_LOCKED = 'RESOURCE_LOCKED';
+    case IDEMPOTENCY_KEY_REUSED_WITH_DIFFERENT_PAYLOAD = 'IDEMPOTENCY_KEY_REUSED_WITH_DIFFERENT_PAYLOAD';
+    case IDEMPOTENCY_IN_PROGRESS = 'IDEMPOTENCY_IN_PROGRESS';
 
     public function defaultMessage(): string
     {
@@ -22,6 +24,8 @@ enum BusinessErrorCode: string
             self::AUTH_USER_ALREADY_EXISTS => 'Email ya registrado en el sistema.',
             self::AUTH_USER_INACTIVE => 'La cuenta de usuario no está activa.',
             self::RESOURCE_LOCKED => 'La solicitud ya se está procesando en otra sesión.',
+            self::IDEMPOTENCY_KEY_REUSED_WITH_DIFFERENT_PAYLOAD => 'La Idempotency-Key ya fue usada con un payload diferente.',
+            self::IDEMPOTENCY_IN_PROGRESS => 'La petición con esta Idempotency-Key ya está en proceso.',
         };
     }
 
@@ -41,6 +45,10 @@ enum BusinessErrorCode: string
 
             // 409 Conflict: Cuando intentas crear algo que ya existe.
             self::AUTH_USER_ALREADY_EXISTS => 409,
+            self::IDEMPOTENCY_IN_PROGRESS => 409,
+
+            // 422 Unprocessable Entity: Misma clave pero payload manipulado
+            self::IDEMPOTENCY_KEY_REUSED_WITH_DIFFERENT_PAYLOAD => 422,
 
             // 423 Locked: Recurso bloqueado.
             self::RESOURCE_LOCKED => 423,

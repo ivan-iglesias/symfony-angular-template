@@ -53,6 +53,7 @@ class PasswordlessLoginController extends BaseApiController
             )
         ]
     )]
+    #[Idempotent]
     public function __invoke(Request $request): JsonResponse
     {
         return $this->handleInput(

@@ -1,4 +1,4 @@
-# 📦 Plantilla
+# Plantilla Symfony/Angular
 
 Plantilla para proyectos desarrollados con Symfony/Angular.
 
@@ -11,6 +11,14 @@ cp .env.example .env
 make build
 make up
 ```
+
+Dentro del contenedor php
+
+```bash
+# Generar los pares de claves RSA
+php bin/console lexik:jwt:generate-keypair
+```
+
 
 2. **Inicializar el frontal**
 

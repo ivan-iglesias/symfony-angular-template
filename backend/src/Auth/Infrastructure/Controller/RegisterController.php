@@ -40,6 +40,7 @@ class RegisterController extends BaseApiController
             new OA\Response(response: 400, description: 'El email ya está registrado')
         ]
     )]
+    #[Idempotent]
     public function __invoke(Request $request): JsonResponse
     {
         return $this->handleInput(

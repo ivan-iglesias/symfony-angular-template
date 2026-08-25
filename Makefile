@@ -1,6 +1,8 @@
-PROJECT_NAME := $(shell grep PROJECT_NAME .env | cut -d '=' -f 2)
+# Carga las variables del .env nativamente en Make
+include .env
+export
+
 COMPOSE := docker compose -p $(PROJECT_NAME) -f docker-compose.yml
-PHP_EXEC := docker exec -it $(PROJECT_NAME)_php
 
 .PHONY: build up down start stop ps logs goto redis-cli db-reset db-refresh db-diff db-validate test test-unit test-it help
 
