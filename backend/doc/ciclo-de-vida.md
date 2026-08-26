@@ -1,10 +1,9 @@
-# Ciclo de Vida y Flujo Funcional de Peticiones HTTP
 
-## 1. Visión General y Filosofía
+## Flujo funcional de peticiones HTTP
 
 La arquitectura de este backend sigue el principio **Happy Path First**. Los controladores únicamente gestionan y retornan el escenario de éxito. Cualquier interrupción del flujo estándar (errores de validación, violaciones de reglas de negocio o fallos de infraestructura) interrumpe la ejecución mediante excepciones.
 
-### Diagrama del Flujo Happy Path First
+<u>**Flujo Happy Path First**</u>
 
 ```
                  [ Petición HTTP ]
@@ -32,7 +31,7 @@ La arquitectura de este backend sigue el principio **Happy Path First**. Los con
                [ Respuesta HTTP ]
 ```
 
-## 2. Mapa de Eventos y prioridades de ejecución
+## Mapa de eventos y prioridades de ejecución
 
 Symfony utiliza un bus de eventos (`KernelEvents`) para procesar las peticiones. La ejecución ordenada de nuestros listeners garantiza el aislamiento de responsabilidades:
 
@@ -45,13 +44,13 @@ Symfony utiliza un bus de eventos (`KernelEvents`) para procesar las peticiones.
 | `KernelEvents::RESPONSE` | `IdempotencyListener` | **0** | Almacena en caché la respuesta del controlador si la petición incluía cabecera de idempotencia. |
 | `KernelEvents::RESPONSE` | `CorrelationIdListener` | **-255** | Inyecta la cabecera `X-Correlation-ID` en el HTTP Response antes de enviarlo al cliente. |
 
-## 3. Resolución y Validación Automática de DTOs (`RequestDtoResolver`)
+## Resolución y validación automática de DTOs
 
 Para evitar heredar de controladores base (`BaseApiController`) o duplicar código de deserialización en cada acción, se utiliza un **Value Resolver** personalizado.
 
 Cuando Symfony inspecciona la firma del controlador, `RequestDtoResolver` entra en acción únicamente si el parámetro implementa una clase bajo el namespace de DTOs (`\DTO\`).
 
-### Flujo de Trabajo
+<u>**Flujo de mapeo a DTO**</u>
 
 ```
 [ HTTP Request ]
@@ -71,7 +70,7 @@ Cuando Symfony inspecciona la firma del controlador, `RequestDtoResolver` entra 
 [ Controller ] (Recibe el DTO instanciado, validado e inmutable)
 ```
 
-### Ejemplo en Controller
+<u>**Ejemplo**</u>
 
 El controlador recibe el DTO completamente construido y validado:
 
@@ -85,7 +84,7 @@ public function __invoke(LoginInput $input): ApiResponse
 }
 ```
 
-## 4. Trazabilidad Global con Correlation ID
+## Trazabilidad global con correlation ID
 
 Cada petición HTTP entrante se vincula a un id de trazabilidad único (correlation_id). Este ID acompaña a la petición a través de todas las capas de infraestructura, logs y respuestas.
 
@@ -105,7 +104,7 @@ Cada petición HTTP entrante se vincula a un id de trazabilidad único (correlat
 [ HTTP Response (Client) ]
 ```
 
-## 5. Gestión Unificada de Excepciones
+## Gestión unificada de excepciones
 
 El `ApiExceptionListener` intercepta cualquier fallo devuelto por la aplicación y ajusta el formato de salida JSON y el código de estado HTTP adecuado:
 
