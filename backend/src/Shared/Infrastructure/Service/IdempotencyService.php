@@ -2,7 +2,7 @@
 
 namespace App\Shared\Infrastructure\Service;
 
-use App\Shared\Domain\Exception\BusinessErrorCode;
+use App\Shared\Domain\Exception\ApiErrorCode;
 use App\Shared\Infrastructure\Response\ApiResponse;
 use Psr\Cache\CacheItemPoolInterface;
 use Symfony\Component\HttpFoundation\Response;
@@ -24,7 +24,7 @@ class IdempotencyService
         }
 
         if (($data['fingerprint'] ?? null) !== $fingerprint) {
-            $errorCode = BusinessErrorCode::IDEMPOTENCY_KEY_REUSED_WITH_DIFFERENT_PAYLOAD;
+            $errorCode = ApiErrorCode::IDEMPOTENCY_KEY_REUSED_WITH_DIFFERENT_PAYLOAD;
 
             return ApiResponse::error(
                 $errorCode->value,

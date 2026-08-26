@@ -7,7 +7,7 @@ use App\Auth\Application\DTO\PasswordlessLoginVerifyInput;
 use App\Auth\Domain\Repository\UserRepositoryInterface;
 use App\Auth\Domain\Repository\SecurityTokenRepositoryInterface;
 use App\Auth\Domain\Enum\SecurityTokenType;
-use App\Shared\Domain\Exception\BusinessErrorCode;
+use App\Shared\Domain\Exception\ApiErrorCode;
 use App\Shared\Domain\Exception\BusinessException;
 use Lexik\Bundle\JWTAuthenticationBundle\Services\JWTTokenManagerInterface;
 use Psr\Log\LoggerInterface;
@@ -26,7 +26,7 @@ class PasswordlessLoginVerifyAction
         $user = $this->userRepository->findByEmail($input->email);
 
         if (!$user) {
-            throw new BusinessException(BusinessErrorCode::AUTH_USER_NOT_FOUND);
+            throw new BusinessException(ApiErrorCode::AUTH_USER_NOT_FOUND);
         }
 
         $securityToken = $this->tokenRepository->findByTokenAndUser(
@@ -36,13 +36,13 @@ class PasswordlessLoginVerifyAction
         );
 
         if (!$securityToken) {
-            throw new BusinessException(BusinessErrorCode::AUTH_INVALID_CODE);
+            throw new BusinessException(ApiErrorCode::AUTH_INVALID_CODE);
         }
 
         $this->tokenRepository->delete($securityToken);
 
         if (!$securityToken->isValid()) {
-            throw new BusinessException(BusinessErrorCode::AUTH_INVALID_CODE);
+            throw new BusinessException(ApiErrorCode::AUTH_INVALID_CODE);
         }
 
         $token = $this->jwtManager->create($user);

@@ -6,7 +6,7 @@ use App\Auth\Application\DTO\RegisterInput;
 use App\Auth\Domain\Entity\User;
 use App\Auth\Domain\Event\UserRegisteredEvent;
 use App\Auth\Domain\Repository\UserRepositoryInterface;
-use App\Shared\Domain\Exception\BusinessErrorCode;
+use App\Shared\Domain\Exception\ApiErrorCode;
 use App\Shared\Domain\Exception\BusinessException;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
@@ -23,7 +23,7 @@ class RegisterAction
     public function execute(RegisterInput $input): void
     {
         if ($this->userRepository->existsByEmail($input->email)) {
-            throw new BusinessException(BusinessErrorCode::AUTH_USER_ALREADY_EXISTS);
+            throw new BusinessException(ApiErrorCode::AUTH_USER_ALREADY_EXISTS);
         }
 
         $user = new User();

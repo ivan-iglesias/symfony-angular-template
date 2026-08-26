@@ -5,24 +5,18 @@ namespace App\Auth\Infrastructure\Controller;
 use App\Auth\Application\Actions\PasswordlessLoginVerifyAction;
 use App\Auth\Application\DTO\AuthResponse;
 use App\Auth\Application\DTO\PasswordlessLoginVerifyInput;
-use App\Shared\Infrastructure\Controller\BaseApiController;
+use App\Shared\Infrastructure\Response\ApiResponse;
 use Nelmio\ApiDocBundle\Attribute\Model;
 use OpenApi\Attributes as OA;
-use Psr\Log\LoggerInterface;
-use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Attribute\Route;
-use Symfony\Component\Validator\Validator\ValidatorInterface;
 
-class PasswordlessLoginVerifyController extends BaseApiController
+class PasswordlessLoginVerifyController extends AbstractController
 {
     public function __construct(
         private readonly PasswordlessLoginVerifyAction $action,
-        LoggerInterface $logger,
-        ValidatorInterface $validator
-    ) {
-        parent::__construct($logger, $validator);
-    }
+    ) { }
 
     #[Route('/api/auth/login-code/verify', name: 'api_passwordless_login_verify', methods: ['POST'])]
     #[OA\Post(
@@ -74,12 +68,10 @@ class PasswordlessLoginVerifyController extends BaseApiController
             )
         ]
     )]
-    public function __invoke(Request $request): JsonResponse
+    public function __invoke(Request $request, PasswordlessLoginVerifyInput $input): ApiResponse
     {
-        return $this->handleInput(
-            $request,
-            PasswordlessLoginVerifyInput::class,
-            fn($input) => $this->action->execute($input)
-        );
+        $responseDto = $this->action->execute($input);
+
+        return ApiResponse::success($responseDto);
     }
 }

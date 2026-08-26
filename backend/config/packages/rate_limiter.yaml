@@ -1,6 +1,19 @@
 framework:
+
+    # Permite ráfagas de 100 peticiones. Una vez gastadas, se recuperan todas al pasar el minuto:
+    #
+    #   limit: 100
+    #   amount: 100
+    #   interval: '1 minute'
+    #
+    # Permite ráfagas iniciales de 100 peticiones. Una vez gastadas, recuperas 10 peticiones por minuto:
+    #
+    #   limit: 100
+    #   amount: 10
+    #   interval: '1 minute'
+    #
     rate_limiter:
-        api_limit:
+        api_limiter:
             policy: 'token_bucket'
             limit: 100
-            rate: { interval: '1 minute' }
+            rate: { interval: '1 minute', amount: 100 }

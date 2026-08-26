@@ -2,17 +2,19 @@
 
 namespace App\Shared\Infrastructure\EventListener;
 
-use App\Shared\Domain\Exception\BusinessErrorCode;
+use App\Shared\Domain\Exception\ApiErrorCode;
 use App\Shared\Infrastructure\Attribute\ControllerAttributeInspector;
 use App\Shared\Infrastructure\Attribute\Idempotent;
 use App\Shared\Infrastructure\Response\ApiResponse;
 use App\Shared\Infrastructure\Service\IdempotencyService;
+use Symfony\Component\EventDispatcher\Attribute\AsEventListener;
 use Symfony\Component\HttpKernel\Event\RequestEvent;
 use Symfony\Component\HttpKernel\Event\ResponseEvent;
+use Symfony\Component\HttpKernel\KernelEvents;
 use Symfony\Component\Lock\LockFactory;
 use Symfony\Component\Lock\LockInterface;
 
-class IdempotencyListener
+final readonly class IdempotencyListener
 {
     private const ATTR_CACHE_KEY = '_idempotency_cache_key';
     private const ATTR_FINGERPRINT = '_idempotency_fingerprint';
@@ -25,6 +27,7 @@ class IdempotencyListener
         private readonly LockFactory $lockFactory
     ) {}
 
+    #[AsEventListener(event: KernelEvents::REQUEST, priority: 10)]
     public function onKernelRequest(RequestEvent $event): void
     {
         if (!$event->isMainRequest()) {
@@ -59,7 +62,7 @@ class IdempotencyListener
         $lock = $this->lockFactory->createLock('lock_' . $cacheKey, 5.0);
 
         if (!$lock->acquire()) {
-            $errorCode = BusinessErrorCode::IDEMPOTENCY_IN_PROGRESS;
+            $errorCode = ApiErrorCode::IDEMPOTENCY_IN_PROGRESS;
 
             $event->setResponse(ApiResponse::error(
                 $errorCode->value,
@@ -77,6 +80,7 @@ class IdempotencyListener
         $request->attributes->set(self::ATTR_TTL, $idempotentAttribute->ttlSeconds);
     }
 
+    #[AsEventListener(event: KernelEvents::RESPONSE, priority: 0)]
     public function onKernelResponse(ResponseEvent $event): void
     {
         if (!$event->isMainRequest()) {

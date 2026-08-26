@@ -3,22 +3,16 @@
 namespace App\Auth\Infrastructure\Controller;
 
 use App\Auth\Application\Actions\ConfirmAction;
-use App\Shared\Infrastructure\Controller\BaseApiController;
+use App\Shared\Infrastructure\Response\ApiResponse;
 use OpenApi\Attributes as OA;
-use Psr\Log\LoggerInterface;
-use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Routing\Attribute\Route;
-use Symfony\Component\Validator\Validator\ValidatorInterface;
 
-class ConfirmAccountController extends BaseApiController
+class ConfirmAccountController extends AbstractController
 {
     public function __construct(
         private readonly ConfirmAction $confirmAction,
-        LoggerInterface $logger,
-        ValidatorInterface $validator
-    ) {
-        parent::__construct($logger, $validator);
-    }
+    ) {}
 
     #[Route('/api/auth/confirm/{token}', name: 'api_auth_confirm', methods: ['GET'])]
     #[OA\Get(
@@ -45,14 +39,12 @@ class ConfirmAccountController extends BaseApiController
             )
         ]
     )]
-    public function __invoke(string $token): JsonResponse
+    public function __invoke(string $token): ApiResponse
     {
-        return $this->handleSimpleAction(function () use ($token) {
-            $this->confirmAction->execute($token);
+        $this->confirmAction->execute($token);
 
-            return [
-                'message' => '¡Cuenta confirmada con éxito! Ya puedes iniciar sesión.'
-            ];
-        });
+        return ApiResponse::success(
+            message: '¡Cuenta confirmada con éxito! Ya puedes iniciar sesión.'
+        );
     }
 }

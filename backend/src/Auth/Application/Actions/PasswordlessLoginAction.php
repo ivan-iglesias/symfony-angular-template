@@ -31,7 +31,7 @@ class PasswordlessLoginAction
             $user,
             $code,
             SecurityTokenType::TYPE_LOGIN,
-            15
+            1
         );
 
         $this->tokenRepository->save($token);

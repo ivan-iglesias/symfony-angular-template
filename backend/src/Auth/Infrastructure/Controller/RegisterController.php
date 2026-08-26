@@ -4,24 +4,18 @@ namespace App\Auth\Infrastructure\Controller;
 
 use App\Auth\Application\Actions\RegisterAction;
 use App\Auth\Application\DTO\RegisterInput;
-use App\Shared\Infrastructure\Controller\BaseApiController;
+use App\Shared\Infrastructure\Response\ApiResponse;
 use Nelmio\ApiDocBundle\Attribute\Model;
 use OpenApi\Attributes as OA;
-use Psr\Log\LoggerInterface;
-use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Attribute\Route;
-use Symfony\Component\Validator\Validator\ValidatorInterface;
 
-class RegisterController extends BaseApiController
+class RegisterController extends AbstractController
 {
     public function __construct(
         private readonly RegisterAction $action,
-        LoggerInterface $logger,
-        ValidatorInterface $validator
-    ) {
-        parent::__construct($logger, $validator);
-    }
+    ) {}
 
     #[Route('/api/auth/register', name: 'api_auth_register', methods: ['POST'])]
     #[OA\Post(
@@ -41,12 +35,10 @@ class RegisterController extends BaseApiController
         ]
     )]
     #[Idempotent]
-    public function __invoke(Request $request): JsonResponse
+    public function __invoke(Request $request, RegisterInput $input): ApiResponse
     {
-        return $this->handleInput(
-            $request,
-            RegisterInput::class,
-            fn($input) => $this->action->execute($input)
-        );
+        $responseDto = $this->action->execute($input);
+
+        return ApiResponse::success($responseDto);
     }
 }

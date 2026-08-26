@@ -2,14 +2,23 @@
 
 namespace App\Shared\Domain\Exception;
 
-enum BusinessErrorCode: string
+enum ApiErrorCode: string
 {
+    // Errores de Entrada / Infraestructura HTTP
+    case VALIDATION_ERROR = 'VALIDATION_ERROR';
+    // case RESOURCE_NOT_FOUND = 'RESOURCE_NOT_FOUND';
+    // case METHOD_NOT_ALLOWED = 'METHOD_NOT_ALLOWED';
+    case TOO_MANY_REQUESTS = 'TOO_MANY_REQUESTS';
+
+    // Autenticación y Autorización
     case AUTH_INVALID_CODE = 'AUTH_INVALID_CODE';
     case AUTH_INVALID_TOKEN = 'AUTH_INVALID_TOKEN';
     case AUTH_INVALID_CREDENTIALS = 'AUTH_INVALID_CREDENTIALS';
     case AUTH_USER_NOT_FOUND = 'AUTH_USER_NOT_FOUND';
     case AUTH_USER_ALREADY_EXISTS = 'AUTH_USER_ALREADY_EXISTS';
     case AUTH_USER_INACTIVE = 'AUTH_USER_INACTIVE';
+
+    // Idempotencia y Concurrencia
     case RESOURCE_LOCKED = 'RESOURCE_LOCKED';
     case IDEMPOTENCY_KEY_REUSED_WITH_DIFFERENT_PAYLOAD = 'IDEMPOTENCY_KEY_REUSED_WITH_DIFFERENT_PAYLOAD';
     case IDEMPOTENCY_IN_PROGRESS = 'IDEMPOTENCY_IN_PROGRESS';
@@ -17,12 +26,18 @@ enum BusinessErrorCode: string
     public function defaultMessage(): string
     {
         return match ($this) {
+            self::VALIDATION_ERROR => 'Error de validación en los campos de la petición.',
+            // self::RESOURCE_NOT_FOUND => 'El recurso solicitado no existe.',
+            // self::METHOD_NOT_ALLOWED => 'Método HTTP no permitido para esta ruta.',
+            self::TOO_MANY_REQUESTS => 'Has superado el límite de peticiones permitidas por minuto.',
+
             self::AUTH_INVALID_CODE => 'El código es incorrecto o ha caducado.',
             self::AUTH_INVALID_TOKEN => 'El token proporcionado no existe o ha expirado.',
             self::AUTH_INVALID_CREDENTIALS => 'Credenciales incorrectas.',
             self::AUTH_USER_NOT_FOUND => 'Usuario no encontrado.',
             self::AUTH_USER_ALREADY_EXISTS => 'Email ya registrado en el sistema.',
             self::AUTH_USER_INACTIVE => 'La cuenta de usuario no está activa.',
+
             self::RESOURCE_LOCKED => 'La solicitud ya se está procesando en otra sesión.',
             self::IDEMPOTENCY_KEY_REUSED_WITH_DIFFERENT_PAYLOAD => 'La Idempotency-Key ya fue usada con un payload diferente.',
             self::IDEMPOTENCY_IN_PROGRESS => 'La petición con esta Idempotency-Key ya está en proceso.',
@@ -43,15 +58,19 @@ enum BusinessErrorCode: string
             // 404 Not Found: Recurso no encontrado.
             self::AUTH_USER_NOT_FOUND => 404,
 
-            // 409 Conflict: Cuando intentas crear algo que ya existe.
-            self::AUTH_USER_ALREADY_EXISTS => 409,
+            // 409 Conflict
+            self::AUTH_USER_ALREADY_EXISTS,
             self::IDEMPOTENCY_IN_PROGRESS => 409,
 
-            // 422 Unprocessable Entity: Misma clave pero payload manipulado
+            // 422 Unprocessable Content
+            self::VALIDATION_ERROR,
             self::IDEMPOTENCY_KEY_REUSED_WITH_DIFFERENT_PAYLOAD => 422,
 
-            // 423 Locked: Recurso bloqueado.
+            // 423 Locked
             self::RESOURCE_LOCKED => 423,
+
+            // 429 Too Many Requests
+            self::TOO_MANY_REQUESTS => 429,
         };
     }
 }

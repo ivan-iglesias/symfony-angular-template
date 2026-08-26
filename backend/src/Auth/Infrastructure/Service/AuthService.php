@@ -5,7 +5,7 @@ namespace App\Auth\Infrastructure\Service;
 use App\Auth\Domain\Entity\User;
 use App\Auth\Domain\Repository\UserRepositoryInterface;
 use App\Auth\Domain\Service\AuthServiceInterface;
-use App\Shared\Domain\Exception\BusinessErrorCode;
+use App\Shared\Domain\Exception\ApiErrorCode;
 use App\Shared\Domain\Exception\BusinessException;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
@@ -21,11 +21,11 @@ class AuthService implements AuthServiceInterface
         $user = $this->userRepository->findByEmail($email);
 
         if (!$user || !$this->passwordHasher->isPasswordValid($user, $password)) {
-            throw new BusinessException(BusinessErrorCode::AUTH_INVALID_CREDENTIALS);
+            throw new BusinessException(ApiErrorCode::AUTH_INVALID_CREDENTIALS);
         }
 
         if (!$user->isActive()) {
-            throw new BusinessException(BusinessErrorCode::AUTH_USER_INACTIVE);
+            throw new BusinessException(ApiErrorCode::AUTH_USER_INACTIVE);
         }
 
         return $user;

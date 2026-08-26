@@ -4,24 +4,18 @@ namespace App\Auth\Infrastructure\Controller;
 
 use App\Auth\Application\Actions\PasswordlessLoginAction;
 use App\Auth\Application\DTO\PasswordlessLoginInput;
-use App\Shared\Infrastructure\Controller\BaseApiController;
+use App\Shared\Infrastructure\Response\ApiResponse;
 use Nelmio\ApiDocBundle\Attribute\Model;
 use OpenApi\Attributes as OA;
-use Psr\Log\LoggerInterface;
-use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Attribute\Route;
-use Symfony\Component\Validator\Validator\ValidatorInterface;
 
-class PasswordlessLoginController extends BaseApiController
+class PasswordlessLoginController extends AbstractController
 {
     public function __construct(
         private readonly PasswordlessLoginAction $action,
-        LoggerInterface $logger,
-        ValidatorInterface $validator
-    ) {
-        parent::__construct($logger, $validator);
-    }
+    ) { }
 
     #[Route('/api/auth/login-code', name: 'api_passwordless_login', methods: ['POST'])]
     #[OA\Post(
@@ -54,12 +48,10 @@ class PasswordlessLoginController extends BaseApiController
         ]
     )]
     #[Idempotent]
-    public function __invoke(Request $request): JsonResponse
+    public function __invoke(Request $request, PasswordlessLoginInput $input): ApiResponse
     {
-        return $this->handleInput(
-            $request,
-            PasswordlessLoginInput::class,
-            fn($input) => $this->action->execute($input)
-        );
+        $responseDto = $this->action->execute($input);
+
+        return ApiResponse::success($responseDto);
     }
 }

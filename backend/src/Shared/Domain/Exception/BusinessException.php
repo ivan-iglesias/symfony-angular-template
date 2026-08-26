@@ -2,23 +2,20 @@
 
 namespace App\Shared\Domain\Exception;
 
-use Exception;
-
-class BusinessException extends Exception
+class BusinessException extends \DomainException
 {
     public function __construct(
-        private readonly BusinessErrorCode $businessCode,
-        ?string $message = null,
-        ?int $code = null
+        private readonly ApiErrorCode $errorCode,
+        ?string $message = null
     ) {
         parent::__construct(
-            $message ?? $this->businessCode->defaultMessage(),
-            $code ?? $this->businessCode->httpCode()
+            $message ?? $this->errorCode->defaultMessage(),
+            $this->errorCode->httpCode()
         );
     }
 
-    public function getBusinessCode(): string
+    public function getErrorCode(): ApiErrorCode
     {
-        return $this->businessCode->value;
+        return $this->errorCode;
     }
 }

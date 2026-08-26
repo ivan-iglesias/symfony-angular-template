@@ -5,7 +5,7 @@ namespace App\Auth\Application\Actions;
 
 use App\Auth\Domain\Repository\SecurityTokenRepositoryInterface;
 use App\Auth\Domain\Repository\UserRepositoryInterface;
-use App\Shared\Domain\Exception\BusinessErrorCode;
+use App\Shared\Domain\Exception\ApiErrorCode;
 use App\Shared\Domain\Exception\BusinessException;
 use App\Shared\Domain\Service\LockServiceInterface;
 
@@ -25,7 +25,7 @@ class ConfirmAction
                 $token = $this->tokenRepository->findByValue($tokenValue);
 
                 if (!$token || !$token->isValid()) {
-                    throw new BusinessException(BusinessErrorCode::AUTH_INVALID_TOKEN);
+                    throw new BusinessException(ApiErrorCode::AUTH_INVALID_TOKEN);
                 }
 
                 $user = $token->getUser();
@@ -37,7 +37,7 @@ class ConfirmAction
         );
 
         if (!$executed) {
-            throw new BusinessException(BusinessErrorCode::RESOURCE_LOCKED);
+            throw new BusinessException(ApiErrorCode::RESOURCE_LOCKED);
         }
     }
 }

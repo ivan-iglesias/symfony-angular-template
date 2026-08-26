@@ -3,31 +3,20 @@
 namespace App\Shared\Infrastructure\Response;
 
 use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\HttpFoundation\RequestStack;
 
 class ApiResponse extends JsonResponse
 {
-    private static ?RequestStack $requestStack = null;
-
-    // Se inicializa una vez vía "CorrelationIdListener"
-    public static function init(RequestStack $requestStack): void
-    {
-        self::$requestStack = $requestStack;
-    }
-
-    private function __construct(
+    public function __construct(
         string $code,
         string $message,
         mixed $data = null,
-        int $status = 200
+        int $status = 200,
     ) {
-        $correlationId = self::$requestStack?->getCurrentRequest()?->attributes->get('correlation_id');
-
         parent::__construct([
             'code' => $code,
             'message' => $message,
             'data' => $data,
-            'correlation_id' => $correlationId,
+            // 'correlation_id' => null
         ], $status);
     }
 

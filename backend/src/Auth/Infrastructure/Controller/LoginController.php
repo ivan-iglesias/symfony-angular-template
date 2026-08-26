@@ -5,27 +5,23 @@ namespace App\Auth\Infrastructure\Controller;
 use App\Auth\Application\Actions\LoginAction;
 use App\Auth\Application\DTO\AuthResponse;
 use App\Auth\Application\DTO\LoginInput;
-use App\Shared\Infrastructure\Controller\BaseApiController;
-use App\Shared\Infrastructure\Controller\Traits\HasRateLimiterTrait;
+use App\Shared\Infrastructure\Response\ApiResponse;
+use App\Shared\Infrastructure\Security\RateLimiter\HasRateLimiterTrait;
 use Nelmio\ApiDocBundle\Attribute\Model;
 use OpenApi\Attributes as OA;
 use Psr\Log\LoggerInterface;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
-class LoginController extends BaseApiController
+final class LoginController extends AbstractController
 {
     use HasRateLimiterTrait;
-    
+
     public function __construct(
-        private readonly LoginAction $action,
-        LoggerInterface $logger,
-        ValidatorInterface $validator
-    ) {
-        parent::__construct($logger, $validator);
-    }
+        private readonly LoginAction $action
+    ) {}
 
     #[Route('/api/auth/login', name: 'api_login', methods: ['POST'])]
     #[OA\Post(
@@ -75,14 +71,12 @@ class LoginController extends BaseApiController
             )
         ]
     )]
-    public function __invoke(Request $request): JsonResponse
+    public function __invoke(Request $request, LoginInput $input): ApiResponse
     {
         $this->checkRateLimit($request);
 
-        return $this->handleInput(
-            $request,
-            LoginInput::class,
-            fn($input) => $this->action->execute($input)
-        );
+        $responseDto = $this->action->execute($input);
+
+        return ApiResponse::success($responseDto);
     }
 }
