@@ -7,7 +7,6 @@ use App\Shared\Domain\Exception\BusinessException;
 use App\Shared\Domain\Exception\ValidationException;
 use App\Shared\Infrastructure\Response\ApiResponse;
 use Psr\Log\LoggerInterface;
-use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Component\EventDispatcher\Attribute\AsEventListener;
 use Symfony\Component\HttpKernel\Event\ExceptionEvent;
 use Symfony\Component\HttpKernel\Exception\HttpExceptionInterface;
@@ -18,7 +17,6 @@ final readonly class ApiExceptionListener
 {
     public function __construct(
         private LoggerInterface $logger,
-        #[Autowire('%kernel.environment%')]
         private string $environment
     ) {}
 
@@ -26,10 +24,13 @@ final readonly class ApiExceptionListener
     {
         $exception = $event->getThrowable();
         $request = $event->getRequest();
+        $isDev = $this->environment === 'dev' || $this->environment === 'test';
 
-        // 1. Errores de Validación de DTOs (422)
+        // -------------------------------------------------------------
+        // 1. Errores de Validación de DTOs
+        // -------------------------------------------------------------
         if ($exception instanceof ValidationException) {
-            $errorCode = ApiErrorCode::VALIDATION_ERROR;
+            $errorCode = $exception->getErrorCode();
 
             $event->setResponse(ApiResponse::error(
                 code: $errorCode->value,
@@ -40,7 +41,9 @@ final readonly class ApiExceptionListener
             return;
         }
 
+        // -------------------------------------------------------------
         // 2. Errores de Negocio/Dominio
+        // -------------------------------------------------------------
         if ($exception instanceof BusinessException) {
             $errorCode = $exception->getErrorCode();
 
@@ -53,36 +56,43 @@ final readonly class ApiExceptionListener
             return;
         }
 
+        // -------------------------------------------------------------
         // 3. Errores de Symfony / HTTP (404, 405, 429, etc.)
-        // TODO: Revisar match stados
+        // -------------------------------------------------------------
         if ($exception instanceof HttpExceptionInterface) {
             $status = $exception->getStatusCode();
-            $code = match ($status) {
-                404 => 'RESOURCE_NOT_FOUND',
-                405 => 'METHOD_NOT_ALLOWED',
-                403 => 'ACCESS_DENIED',
-                429 => 'TOO_MANY_REQUESTS',
-                default => 'HTTP_ERROR',
+
+            $errorCode = match ($status) {
+                404 => ApiErrorCode::RESOURCE_NOT_FOUND,
+                405 => ApiErrorCode::METHOD_NOT_ALLOWED,
+                403 => ApiErrorCode::ACCESS_DENIED,
+                429 => ApiErrorCode::TOO_MANY_REQUESTS,
+                default => ApiErrorCode::HTTP_ERROR,
             };
 
+            $message = $isDev && !empty($exception->getMessage())
+                ? $exception->getMessage()
+                : $errorCode->defaultMessage();
+
             $event->setResponse(ApiResponse::error(
-                code: $code,
-                message: $exception->getMessage(),
+                code: $errorCode->value,
+                message: $message,
                 status: $status,
                 data: null,
             ));
-
             return;
         }
 
+        // -------------------------------------------------------------
         // 4. Fallos Críticos no controlados (500)
+        // -------------------------------------------------------------
         $correlationId = (string) $request->attributes->get('correlation_id', '');
 
-        $this->logger->critical(sprintf('Excepción no capturada [%s]: %s', $correlationId, $exception->getMessage()), [
-            'trace' => $exception->getTraceAsString()
+        $this->logger->critical(sprintf('Unhandled exception: %s', $correlationId, $exception->getMessage()), [
+            'exception' => $exception,
         ]);
 
-        $message = ($this->environment === 'dev')
+        $message = $isDev
             ? 'DEBUG: ' . $exception->getMessage()
             : 'Error interno del servidor';
 

@@ -24,6 +24,10 @@ services:
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones
 
+    App\Shared\Infrastructure\EventListener\ApiExceptionListener:
+        arguments:
+            $environment: '%kernel.environment%'
+
     App\Shared\Infrastructure\Logging\CorrelationIdProcessor:
         tags:
             - { name: monolog.processor } # Le dice a Monolog: "Úsame en cada log"
