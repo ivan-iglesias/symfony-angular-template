@@ -5,6 +5,7 @@ namespace App\Shared\Domain\Exception;
 enum ApiErrorCode: string
 {
     // Errores de Entrada / Infraestructura HTTP
+    case INVALID_JSON = 'INVALID_JSON';
     case VALIDATION_ERROR = 'VALIDATION_ERROR';
     // case RESOURCE_NOT_FOUND = 'RESOURCE_NOT_FOUND';
     // case METHOD_NOT_ALLOWED = 'METHOD_NOT_ALLOWED';
@@ -26,6 +27,7 @@ enum ApiErrorCode: string
     public function defaultMessage(): string
     {
         return match ($this) {
+            self::INVALID_JSON => 'El cuerpo de la petición contiene un JSON inválido o mal formado.',
             self::VALIDATION_ERROR => 'Error de validación en los campos de la petición.',
             // self::RESOURCE_NOT_FOUND => 'El recurso solicitado no existe.',
             // self::METHOD_NOT_ALLOWED => 'Método HTTP no permitido para esta ruta.',
@@ -47,6 +49,9 @@ enum ApiErrorCode: string
     public function httpCode(): int
     {
         return match ($this) {
+            // 400 Bad Request
+            self::INVALID_JSON => 400,
+
             // 401 Unauthorized: Cuando las credenciales (código o token) fallan.
             self::AUTH_INVALID_CODE,
             self::AUTH_INVALID_TOKEN,
