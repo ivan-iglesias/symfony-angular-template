@@ -6,6 +6,7 @@ use App\Auth\Domain\Entity\User;
 use App\Auth\Domain\Repository\UserRepositoryInterface;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
+use Symfony\Component\Uid\Uuid;
 
 class DoctrineUserRepository extends ServiceEntityRepository implements UserRepositoryInterface
 {
@@ -14,8 +15,12 @@ class DoctrineUserRepository extends ServiceEntityRepository implements UserRepo
         parent::__construct($registry, User::class);
     }
 
-    public function findById(string $id): ?User
+    public function findById(Uuid|string $id): ?User
     {
+        if (is_string($id)) {
+            $id = Uuid::fromString($id);
+        }
+        
         return $this->find($id);
     }
 

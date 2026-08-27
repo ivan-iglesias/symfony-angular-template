@@ -6,23 +6,24 @@
 
 ## Comandos básicos
 
-### Crear una nueva migración
+### Doctrine
 
-Detectar cambios y generar el archivo de migración
+```sh
+# Borrado de migraciones si hay inconsistencias
+rm migrations/Version*.php
 
-```
-php bin/console make:migration
-php bin/console doctrine:migrations:migrate
-```
-
-### Borrón y cuenta nueva
-
-```
+# Recrea la base de datos limpia
 php bin/console doctrine:database:drop --force
 php bin/console doctrine:database:create
-php bin/console doctrine:migrations:migrate
-php bin/console doctrine:schema:validate
-php bin/console doctrine:fixtures:load
+
+# Genera migración con el esquema actual
+php bin/console doctrine:migrations:diff
+
+# Aplica la migración
+php bin/console doctrine:migrations:migrate --no-interaction
+
+# Carga fixtures
+php bin/console doctrine:fixtures:load --no-interaction
 ```
 
 ### Redis

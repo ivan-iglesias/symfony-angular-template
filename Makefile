@@ -39,23 +39,6 @@ goto:
 redis-cli:
 	docker exec -it $(PROJECT_NAME)_redis redis-cli
 
-## --- DATABASE & DOCTRINE ---
-db-reset: ## Hard reset de la base de datos
-	$(PHP_EXEC) php bin/console doctrine:database:drop --force --if-exists
-	$(PHP_EXEC) php bin/console doctrine:database:create
-	$(PHP_EXEC) php bin/console doctrine:migrations:migrate --no-interaction
-	$(PHP_EXEC) php bin/console doctrine:fixtures:load --no-interaction
-
-db-refresh: ## Aplica migraciones pendientes y recarga datos
-	$(PHP_EXEC) php bin/console doctrine:migrations:migrate --no-interaction
-	$(PHP_EXEC) php bin/console doctrine:fixtures:load --no-interaction
-
-db-diff: ## Genera migración comparando Entidades vs DB
-	$(PHP_EXEC) php bin/console make:migration
-
-db-validate: ## Valida el mapeo de Doctrine
-	$(PHP_EXEC) php bin/console doctrine:schema:validate
-
 ## --- TESTING ---
 test:
 	$(PHP_EXEC) vendor/bin/phpunit

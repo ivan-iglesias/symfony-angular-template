@@ -72,7 +72,6 @@ class UserFixtures extends Fixture
             }
 
             $manager->persist($user);
-            $manager->flush();
 
             if (!$data['active']) {
                 $token = new SecurityToken(
@@ -84,5 +83,7 @@ class UserFixtures extends Fixture
                 $this->tokenRepository->save($token);
             }
         }
+
+        $manager->flush();
     }
 }

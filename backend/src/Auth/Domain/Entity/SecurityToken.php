@@ -4,6 +4,7 @@ namespace App\Auth\Domain\Entity;
 
 use App\Auth\Domain\Enum\SecurityTokenType;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Uid\Uuid;
 
 #[ORM\Entity]
 #[ORM\Table(name: 'security_tokens')]
@@ -11,9 +12,8 @@ use Doctrine\ORM\Mapping as ORM;
 class SecurityToken
 {
     #[ORM\Id]
-    #[ORM\GeneratedValue]
-    #[ORM\Column]
-    private ?int $id = null;
+    #[ORM\Column(type: 'uuid', unique: true)]
+    private Uuid $id;
 
     #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'securityTokens')]
     #[ORM\JoinColumn(nullable: false, onDelete: 'CASCADE')]
@@ -30,10 +30,16 @@ class SecurityToken
 
     public function __construct(User $user, string $token, SecurityTokenType $type, int $ttlInMinutes = 24 * 60)
     {
+        $this->id = Uuid::v7();
         $this->user = $user;
         $this->token = $token;
         $this->type = $type;
         $this->expiresAt = new \DateTimeImmutable("+{$ttlInMinutes} minutes");
+    }
+
+    public function getId(): Uuid
+    {
+        return $this->id;
     }
 
     public function isValid(): bool
