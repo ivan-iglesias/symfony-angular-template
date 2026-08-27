@@ -2,6 +2,8 @@
 
 namespace App\Auth\Domain\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -36,13 +38,16 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column]
     private string $password;
 
-    #[ORM\OneToMany(mappedBy: 'user', targetEntity: SecurityToken::class, cascade: ['remove'])]
-    private iterable $securityTokens;
+    /**
+     * @var Collection<int, SecurityToken>
+     */
+    #[ORM\OneToMany(mappedBy: 'user', targetEntity: SecurityToken::class, cascade: ['remove'], orphanRemoval: true)]
+    private Collection $securityTokens;
 
     public function __construct()
     {
         $this->id = Uuid::v7();
-        $this->securityTokens = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->securityTokens = new ArrayCollection();
         $this->createdAt = new \DateTimeImmutable();
     }
 
