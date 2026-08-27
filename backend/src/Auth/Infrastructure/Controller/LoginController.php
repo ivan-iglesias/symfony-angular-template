@@ -9,11 +9,9 @@ use App\Shared\Infrastructure\Response\ApiResponse;
 use App\Shared\Infrastructure\Security\RateLimiter\HasRateLimiterTrait;
 use Nelmio\ApiDocBundle\Attribute\Model;
 use OpenApi\Attributes as OA;
-use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Attribute\Route;
-use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 final class LoginController extends AbstractController
 {
