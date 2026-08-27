@@ -12,7 +12,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Attribute\Route;
 
-class PasswordlessLoginVerifyController extends AbstractController
+final class PasswordlessLoginVerifyController extends AbstractController
 {
     public function __construct(
         private readonly PasswordlessLoginVerifyAction $action,

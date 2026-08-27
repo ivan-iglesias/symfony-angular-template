@@ -11,7 +11,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Attribute\Route;
 
-class RegisterController extends AbstractController
+final class RegisterController extends AbstractController
 {
     public function __construct(
         private readonly RegisterAction $action,

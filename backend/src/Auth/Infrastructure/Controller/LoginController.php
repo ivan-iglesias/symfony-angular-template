@@ -6,7 +6,7 @@ use App\Auth\Application\Actions\LoginAction;
 use App\Auth\Application\DTO\AuthResponse;
 use App\Auth\Application\DTO\LoginInput;
 use App\Shared\Infrastructure\Response\ApiResponse;
-use App\Shared\Infrastructure\Security\RateLimiter\HasRateLimiterTrait;
+use App\Shared\Infrastructure\Security\RateLimiter\RateLimiterService;
 use Nelmio\ApiDocBundle\Attribute\Model;
 use OpenApi\Attributes as OA;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -15,10 +15,9 @@ use Symfony\Component\Routing\Attribute\Route;
 
 final class LoginController extends AbstractController
 {
-    use HasRateLimiterTrait;
-
     public function __construct(
-        private readonly LoginAction $action
+        private readonly LoginAction $action,
+        private readonly RateLimiterService $rateLimiter
     ) {}
 
     #[Route('/api/auth/login', name: 'api_login', methods: ['POST'])]
@@ -71,7 +70,7 @@ final class LoginController extends AbstractController
     )]
     public function __invoke(Request $request, LoginInput $input): ApiResponse
     {
-        $this->checkRateLimit($request);
+        $this->rateLimiter->check($request);
 
         $responseDto = $this->action->execute($input);
 
