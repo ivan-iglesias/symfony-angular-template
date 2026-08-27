@@ -12,13 +12,13 @@ use App\Shared\Domain\Exception\BusinessException;
 use Lexik\Bundle\JWTAuthenticationBundle\Services\JWTTokenManagerInterface;
 use Psr\Log\LoggerInterface;
 
-class PasswordlessLoginVerifyAction
+final readonly class PasswordlessLoginVerifyAction
 {
     public function __construct(
-        private UserRepositoryInterface $userRepository,
-        private SecurityTokenRepositoryInterface $tokenRepository,
-        private JWTTokenManagerInterface $jwtManager,
-        private LoggerInterface $logger
+        private readonly UserRepositoryInterface $userRepository,
+        private readonly SecurityTokenRepositoryInterface $tokenRepository,
+        private readonly JWTTokenManagerInterface $jwtManager,
+        private readonly LoggerInterface $logger
     ) {}
 
     public function execute(PasswordlessLoginVerifyInput $input): AuthResponse
@@ -47,7 +47,9 @@ class PasswordlessLoginVerifyAction
 
         $token = $this->jwtManager->create($user);
 
-        $this->logger->info("Login realizado (código): '{$user->getEmail()}'");
+        $this->logger->info('User logged in via security code', [
+            'email' => $user->getEmail()
+        ]);
 
         return AuthResponse::fromUser($token, $user);
     }

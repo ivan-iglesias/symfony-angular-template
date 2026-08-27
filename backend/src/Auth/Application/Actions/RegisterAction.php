@@ -11,13 +11,12 @@ use App\Shared\Domain\Exception\BusinessException;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
-
-class RegisterAction
+final readonly class RegisterAction
 {
     public function __construct(
-        private UserRepositoryInterface $userRepository,
-        private UserPasswordHasherInterface $passwordHasher,
-        private EventDispatcherInterface $eventDispatcher
+        private readonly UserRepositoryInterface $userRepository,
+        private readonly UserPasswordHasherInterface $passwordHasher,
+        private readonly EventDispatcherInterface $eventDispatcher
     ) {}
 
     public function execute(RegisterInput $input): void

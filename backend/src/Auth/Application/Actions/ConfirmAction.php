@@ -12,9 +12,9 @@ use App\Shared\Domain\Service\LockServiceInterface;
 class ConfirmAction
 {
     public function __construct(
-        private UserRepositoryInterface $userRepository,
-        private SecurityTokenRepositoryInterface $tokenRepository,
-        private LockServiceInterface $lockService
+        private readonly UserRepositoryInterface $userRepository,
+        private readonly SecurityTokenRepositoryInterface $tokenRepository,
+        private readonly LockServiceInterface $lockService
     ) {}
 
     public function execute(string $tokenValue): void

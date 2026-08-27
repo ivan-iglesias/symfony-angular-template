@@ -9,14 +9,16 @@ use App\Auth\Domain\Repository\SecurityTokenRepositoryInterface;
 use App\Auth\Domain\Repository\UserRepositoryInterface;
 use App\Auth\Domain\Service\LoginCodeGenerator;
 use App\Auth\Domain\Service\UserRegistrationNotifierInterface;
+use Psr\Log\LoggerInterface;
 
-class PasswordlessLoginAction
+final readonly class PasswordlessLoginAction
 {
     public function __construct(
-        private UserRepositoryInterface $userRepository,
-        private SecurityTokenRepositoryInterface $tokenRepository,
-        private LoginCodeGenerator $codeGenerator,
-        private UserRegistrationNotifierInterface $notifier
+        private readonly UserRepositoryInterface $userRepository,
+        private readonly SecurityTokenRepositoryInterface $tokenRepository,
+        private readonly LoginCodeGenerator $codeGenerator,
+        private readonly UserRegistrationNotifierInterface $notifier,
+        private readonly LoggerInterface $logger
     ) {}
 
     public function execute(PasswordlessLoginInput $input): void
@@ -37,5 +39,9 @@ class PasswordlessLoginAction
         $this->tokenRepository->save($token);
 
         $this->notifier->sendLoginCode($user, $code);
+
+        $this->logger->info('Passwordless login code requested', [
+            'email' => $user->getEmail(),
+        ]);
     }
 }

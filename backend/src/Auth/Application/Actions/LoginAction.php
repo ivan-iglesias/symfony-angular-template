@@ -8,12 +8,12 @@ use App\Auth\Domain\Service\AuthServiceInterface;
 use Lexik\Bundle\JWTAuthenticationBundle\Services\JWTTokenManagerInterface;
 use Psr\Log\LoggerInterface;
 
-class LoginAction
+final readonly class LoginAction
 {
     public function __construct(
-        private AuthServiceInterface $authService,
-        private JWTTokenManagerInterface $jwtManager,
-        private LoggerInterface $logger
+        private readonly AuthServiceInterface $authService,
+        private readonly JWTTokenManagerInterface $jwtManager,
+        private readonly LoggerInterface $logger
     ) {}
 
     public function execute(LoginInput $input): AuthResponse
@@ -22,9 +22,11 @@ class LoginAction
 
         $token = $this->jwtManager->create($user);
 
-        $this->logger->info("Login realizado: '{$user->getEmail()}'");
-
         // if ($userDto->isBanned()) { throw new \Exception("Acceso denegado"); }
+
+        $this->logger->info('User logged in successfully', [
+            'email' => $user->getEmail()
+        ]);
 
         return AuthResponse::fromUser($token, $user);
     }
