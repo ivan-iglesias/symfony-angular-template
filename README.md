@@ -1,30 +1,65 @@
-# Plantilla Symfony/Angular
+# Plantilla proyectos
 
-Plantilla para proyectos desarrollados con Symfony/Angular.
+Plantilla para proyectos desarrollados con **Symfony** y **Angular**.
 
-## 🚀 Inicio Rápido
+## 🛠️ Instalación
 
-1. **Inicializar el back**
+Pasos detallados para configurar el entorno local:
+
+### Backend
 
 ```bash
+# Configurar variables de entorno
 cp .env.example .env
+
+# Generar los contenedores y los levanta
 make build
 make up
 ```
 
-Dentro del contenedor php
+Dentro del contenedor php, al que podemos acceder mediante `make goto` y posterirmente `php`, ejecutamos los siguientes comandos:
 
 ```bash
+# Instalamos dependencias
+composer i
+
 # Generar los pares de claves RSA
 php bin/console lexik:jwt:generate-keypair
+
+# Crear base de datos
+php bin/console doctrine:database:create
+
+# Aplica la migración
+php bin/console doctrine:migrations:migrate --no-interaction
+
+# Carga fixtures
+php bin/console doctrine:fixtures:load --no-interaction
 ```
 
-
-2. **Inicializar el frontal**
+### Frontend
 
 ```bash
 cd frontend/
 npm i
+ng server
+```
+
+## 🚀 Inicio Rápido
+
+### Backend
+
+Lenvantar los contenedores del back
+
+```bash
+make up
+```
+
+### Frontend
+
+Inicializar la web en modo desarrollador
+
+```bash
+cd frontend/
 ng server
 ```
 
