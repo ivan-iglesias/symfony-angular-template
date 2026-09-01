@@ -49,7 +49,7 @@ final readonly class RequestDtoResolver implements ValueResolverInterface
                 $errors[$violation->getPropertyPath()] = $violation->getMessage();
             }
 
-            throw new ValidationException('Error de validación de campos.', $errors);
+            throw new ValidationException($errors, 'Error de validación de campos.');
         }
 
         return [$dto];
