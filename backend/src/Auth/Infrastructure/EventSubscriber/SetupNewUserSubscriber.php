@@ -10,12 +10,13 @@ use App\Auth\Domain\Repository\UserRepositoryInterface;
 use App\Auth\Domain\Service\UserRegistrationNotifierInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
-class SetupNewUserSubscriber implements EventSubscriberInterface
+final readonly class SetupNewUserSubscriber implements EventSubscriberInterface
 {
     public function __construct(
         private SecurityTokenRepositoryInterface $tokenRepository,
         private UserRepositoryInterface $userRepository,
-        private UserRegistrationNotifierInterface $emailService
+        private UserRegistrationNotifierInterface $emailService,
+        private string $confirmationUrlPattern
     ) {}
 
     public static function getSubscribedEvents(): array
@@ -29,6 +30,10 @@ class SetupNewUserSubscriber implements EventSubscriberInterface
     {
         $user = $this->userRepository->findById($event->userId);
 
+        if (null === $user) {
+            return;
+        }
+
         $tokenValue = bin2hex(random_bytes(32));
 
         $securityToken = new SecurityToken(
@@ -39,7 +44,8 @@ class SetupNewUserSubscriber implements EventSubscriberInterface
 
         $this->tokenRepository->save($securityToken);
 
-        $url = "https://acme.com/confirm?token=" . $tokenValue;
+        $url = str_replace('{token}', $tokenValue, $this->confirmationUrlPattern);
+
         $this->emailService->sendConfirmationLink($user, $url);
     }
 }

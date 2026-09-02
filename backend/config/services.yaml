@@ -26,6 +26,10 @@ services:
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones
 
+    App\Auth\Infrastructure\EventSubscriber\SetupNewUserSubscriber:
+        arguments:
+            $confirmationUrlPattern: '%env(FRONTEND_CONFIRMATION_URL)%'
+
     # Definimos la conexión nativa de Redis usando la variable de entorno
     Redis:
         class: Redis
@@ -34,7 +38,7 @@ services:
             - '%env(REDIS_URL)%'
 
     App\Auth\Domain\Service\RefreshTokenGeneratorInterface: '@App\Auth\Infrastructure\Security\RedisRefreshTokenGenerator'
-    
+
     App\Shared\Infrastructure\EventListener\ApiExceptionListener:
         arguments:
             $environment: '%kernel.environment%'
