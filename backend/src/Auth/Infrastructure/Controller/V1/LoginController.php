@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Auth\Infrastructure\Controller;
+namespace App\Auth\Infrastructure\Controller\V1;
 
 use App\Auth\Application\Actions\LoginAction;
 use App\Auth\Application\DTO\AuthResponse;
@@ -24,9 +24,9 @@ final class LoginController extends AbstractController
         private readonly SerializerInterface $serializer
     ) {}
 
-    #[Route('/api/auth/login', name: 'api_login', methods: ['POST'])]
+    #[Route('/api/v1/auth/login', name: 'api_login', methods: ['POST'])]
     #[OA\Post(
-        path: '/api/auth/login',
+        path: '/api/v1/auth/login',
         summary: 'Inicia sesión para obtener el token JWT',
         tags: ['Auth'],
         requestBody: new OA\RequestBody(
@@ -41,7 +41,7 @@ final class LoginController extends AbstractController
                     new OA\Header(
                         header: 'Set-Cookie',
                         description: 'Cookie HTTP-Only',
-                        schema: new OA\Schema(type: 'string', example: 'REFRESH_TOKEN=2d5c8b7f74...; Path=/api/auth; Secure; HttpOnly; SameSite=Strict')
+                        schema: new OA\Schema(type: 'string', example: 'REFRESH_TOKEN=2d5c8b7f74...; Path=/api/v1/auth; Secure; HttpOnly; SameSite=Strict')
                     )
                 ],
                 content: new OA\JsonContent(ref: new Model(type: AuthResponse::class))

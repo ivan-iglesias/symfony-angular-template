@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Auth\Infrastructure\Controller;
+namespace App\Auth\Infrastructure\Controller\V1;
 
 use App\Auth\Application\Actions\ConfirmAction;
 use App\Shared\Infrastructure\Response\ApiResponse;
@@ -14,9 +14,9 @@ final class ConfirmAccountController extends AbstractController
         private readonly ConfirmAction $confirmAction,
     ) {}
 
-    #[Route('/api/auth/confirm/{token}', name: 'api_auth_confirm', methods: ['GET'])]
+    #[Route('/api/v1/auth/confirm/{token}', name: 'api_auth_confirm', methods: ['GET'])]
     #[OA\Get(
-        path: '/api/auth/confirm/{token}',
+        path: '/api/v1/auth/confirm/{token}',
         summary: 'Confirma la cuenta de un usuario mediante un token de email',
         tags: ['Auth'],
         parameters: [

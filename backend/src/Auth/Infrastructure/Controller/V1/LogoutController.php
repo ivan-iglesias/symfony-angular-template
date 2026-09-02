@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Auth\Infrastructure\Controller;
+namespace App\Auth\Infrastructure\Controller\V1;
 
 use App\Auth\Application\Actions\LogoutAction;
 use App\Auth\Domain\Service\AuthCookieFactoryInterface;
@@ -18,9 +18,9 @@ final class LogoutController extends AbstractController
         private readonly string $cookieName = AuthCookieFactoryInterface::REFRESH_TOKEN_COOKIE_NAME
     ) {}
 
-    #[Route('/api/auth/logout', name: 'api_auth_logout', methods: ['POST'])]
+    #[Route('/api/v1/auth/logout', name: 'api_auth_logout', methods: ['POST'])]
     #[OA\Post(
-        path: '/api/auth/logout',
+        path: '/api/v1/auth/logout',
         summary: 'Cierra la sesión destruyendo el Refresh Token en Redis y expirando la cookie HTTP-Only',
         description: 'Requiere que la cookie HTTP-Only `refresh_token` sea enviada automáticamente en las cabeceras de la petición por el navegador o cliente.',
         tags: ['Auth'],

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Auth\Infrastructure\Controller;
+namespace App\Auth\Infrastructure\Controller\V1;
 
 use App\Auth\Application\Actions\RefreshTokenAction;
 use App\Auth\Application\DTO\RefreshResponse;
@@ -21,9 +21,9 @@ final class RefreshTokenController extends AbstractController
         private readonly string $cookieName = AuthCookieFactoryInterface::REFRESH_TOKEN_COOKIE_NAME
     ) {}
 
-    #[Route('/api/auth/refresh', name: 'api_auth_refresh', methods: ['POST'])]
+    #[Route('/api/v1/auth/refresh', name: 'api_auth_refresh', methods: ['POST'])]
     #[OA\Post(
-        path: '/api/auth/refresh',
+        path: '/api/v1/auth/refresh',
         summary: 'Renueva el JWT access_token leyendo la cookie HTTP-Only existente',
         description: 'Requiere que la cookie HTTP-Only `refresh_token` sea enviada automáticamente en las cabeceras de la petición por el navegador o cliente.',
         tags: ['Auth'],

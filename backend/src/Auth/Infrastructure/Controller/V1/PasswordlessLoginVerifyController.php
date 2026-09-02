@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Auth\Infrastructure\Controller;
+namespace App\Auth\Infrastructure\Controller\V1;
 
 use App\Auth\Application\Actions\PasswordlessLoginVerifyAction;
 use App\Auth\Application\DTO\AuthResponse;
@@ -22,9 +22,9 @@ final class PasswordlessLoginVerifyController extends AbstractController
         private readonly SerializerInterface $serializer
     ) { }
 
-    #[Route('/api/auth/login-code/verify', name: 'api_passwordless_login_verify', methods: ['POST'])]
+    #[Route('/api/v1/auth/login-code/verify', name: 'api_passwordless_login_verify', methods: ['POST'])]
     #[OA\Post(
-        path: '/api/auth/login-code/verify',
+        path: '/api/v1/auth/login-code/verify',
         summary: 'Verifica el código de acceso y devuelve el token JWT',
         tags: ['Auth'],
         requestBody: new OA\RequestBody(
@@ -40,7 +40,7 @@ final class PasswordlessLoginVerifyController extends AbstractController
                     new OA\Header(
                         header: 'Set-Cookie',
                         description: 'Cookie HTTP-Only con el refresh token gestionado en Redis',
-                        schema: new OA\Schema(type: 'string', example: 'REFRESH_TOKEN=2d5c8b7f74...; Path=/api/auth; Secure; HttpOnly; SameSite=Strict')
+                        schema: new OA\Schema(type: 'string', example: 'REFRESH_TOKEN=2d5c8b7f74...; Path=/api/v1/auth; Secure; HttpOnly; SameSite=Strict')
                     )
                 ],
                 content: new OA\JsonContent(ref: new Model(type: AuthResponse::class))

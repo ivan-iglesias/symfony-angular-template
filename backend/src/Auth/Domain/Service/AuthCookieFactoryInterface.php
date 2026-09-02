@@ -10,7 +10,7 @@ interface AuthCookieFactoryInterface
 {
     public const REFRESH_TOKEN_COOKIE_NAME = 'refresh_token';
 
-    public const AUTH_PATH = '/api/auth';
+    public const AUTH_PATH = '/api/v1/auth';
 
     public function createRefreshTokenCookie(string $refreshToken): Cookie;
 

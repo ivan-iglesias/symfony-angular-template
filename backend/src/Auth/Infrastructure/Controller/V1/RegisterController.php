@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Auth\Infrastructure\Controller;
+namespace App\Auth\Infrastructure\Controller\V1;
 
 use App\Auth\Application\Actions\RegisterAction;
 use App\Auth\Application\DTO\RegisterInput;
@@ -17,9 +17,9 @@ final class RegisterController extends AbstractController
         private readonly RegisterAction $action,
     ) {}
 
-    #[Route('/api/auth/register', name: 'api_auth_register', methods: ['POST'])]
+    #[Route('/api/v1/auth/register', name: 'api_auth_register', methods: ['POST'])]
     #[OA\Post(
-        path: '/api/auth/register',
+        path: '/api/v1/auth/register',
         summary: 'Registra un nuevo usuario en la plataforma',
         tags: ['Auth'],
         requestBody: new OA\RequestBody(

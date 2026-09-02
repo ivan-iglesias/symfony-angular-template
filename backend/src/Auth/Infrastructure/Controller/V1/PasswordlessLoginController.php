@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Auth\Infrastructure\Controller;
+namespace App\Auth\Infrastructure\Controller\V1;
 
 use App\Auth\Application\Actions\PasswordlessLoginAction;
 use App\Auth\Application\DTO\PasswordlessLoginInput;
@@ -17,9 +17,9 @@ final class PasswordlessLoginController extends AbstractController
         private readonly PasswordlessLoginAction $action,
     ) { }
 
-    #[Route('/api/auth/login-code', name: 'api_passwordless_login', methods: ['POST'])]
+    #[Route('/api/v1/auth/login-code', name: 'api_passwordless_login', methods: ['POST'])]
     #[OA\Post(
-        path: '/api/auth/login-code',
+        path: '/api/v1/auth/login-code',
         summary: 'Solicita un código de acceso de 5 dígitos vía email',
         tags: ['Auth'],
         requestBody: new OA\RequestBody(
