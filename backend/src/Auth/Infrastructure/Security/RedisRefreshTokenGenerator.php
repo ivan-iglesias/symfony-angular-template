@@ -31,7 +31,6 @@ final readonly class RedisRefreshTokenGenerator implements RefreshTokenGenerator
     {
         $tokenKey = self::TOKEN_PREFIX . $refreshToken;
 
-        // Redis devuelve la cadena con el email/identificador si existe, o false/null si expiró o no existe
         $userIdentifier = $this->redis->get($tokenKey);
 
         if (!$userIdentifier || !is_string($userIdentifier)) {
@@ -39,6 +38,20 @@ final readonly class RedisRefreshTokenGenerator implements RefreshTokenGenerator
         }
 
         return $userIdentifier;
+    }
+
+    public function revokeToken(string $refreshToken): void
+    {
+        $tokenKey = self::TOKEN_PREFIX . $refreshToken;
+
+        $userIdentifier = $this->redis->get($tokenKey);
+
+        if ($userIdentifier && is_string($userIdentifier)) {
+            $userSetKey = self::USER_SET_PREFIX . $userIdentifier;
+            $this->redis->sRem($userSetKey, $tokenKey);
+        }
+
+        $this->redis->del($tokenKey);
     }
 
     public function revokeAllForUser(UserInterface $user): void

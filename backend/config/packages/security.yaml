@@ -40,6 +40,7 @@ security:
         # Endpoints públicos explícitos de autenticación
         - { path: ^/api/auth/login$, roles: PUBLIC_ACCESS, methods: [POST] }
         - { path: ^/api/auth/refresh, roles: PUBLIC_ACCESS, methods: [POST] }
+        - { path: ^/api/auth/logout, roles: PUBLIC_ACCESS, methods: [POST] }
         - { path: ^/api/auth/register$, roles: PUBLIC_ACCESS, methods: [POST] }
         - { path: ^/api/auth/verify-code$, roles: PUBLIC_ACCESS, methods: [POST] }
         - { path: ^/api/auth/login-code$, roles: PUBLIC_ACCESS, methods: [POST] }

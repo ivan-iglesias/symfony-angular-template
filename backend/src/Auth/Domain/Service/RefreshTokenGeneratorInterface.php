@@ -18,6 +18,10 @@ interface RefreshTokenGeneratorInterface
      */
     public function validateAndGetUser(string $refreshToken): ?string;
 
+    /**
+     * Revoca un refresh token de un usuario.
+     */
+    public function revokeToken(string $refreshToken): void;
 
     /**
      * Revoca todos los refresh tokens de un usuario.
