@@ -10,7 +10,7 @@ final readonly class AuthResponse
 {
     public function __construct(
         #[SerializedName('access_token')]
-        public readonly string $token,
+        public readonly string $accessToken,
         public readonly string $email,
         public readonly array $roles,
 
@@ -18,10 +18,10 @@ final readonly class AuthResponse
         public readonly string $refreshToken
     ) {}
 
-    public static function create(string $token, string $refreshToken, User $user): self
+    public static function create(string $accessToken, string $refreshToken, User $user): self
     {
         return new self(
-            token: $token,
+            accessToken: $accessToken,
             email: $user->getEmail(),
             roles: $user->getRoles(),
             refreshToken: $refreshToken

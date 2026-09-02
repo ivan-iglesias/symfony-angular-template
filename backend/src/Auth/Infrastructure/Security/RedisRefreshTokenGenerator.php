@@ -27,6 +27,20 @@ final readonly class RedisRefreshTokenGenerator implements RefreshTokenGenerator
         return $tokenString;
     }
 
+    public function validateAndGetUser(string $refreshToken): ?string
+    {
+        $tokenKey = self::TOKEN_PREFIX . $refreshToken;
+
+        // Redis devuelve la cadena con el email/identificador si existe, o false/null si expiró o no existe
+        $userIdentifier = $this->redis->get($tokenKey);
+
+        if (!$userIdentifier || !is_string($userIdentifier)) {
+            return null;
+        }
+
+        return $userIdentifier;
+    }
+
     public function revokeAllForUser(UserInterface $user): void
     {
         $userSetKey = self::USER_SET_PREFIX . $user->getUserIdentifier();

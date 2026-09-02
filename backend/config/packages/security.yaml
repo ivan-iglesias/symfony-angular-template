@@ -36,9 +36,10 @@ security:
     # Note: Only the *first* matching rule is applied
     access_control:
         # Principio de Mínimo Privilegio y la Prevención de Errores Futuros (Seguridad por Defecto).
-        
+
         # Endpoints públicos explícitos de autenticación
         - { path: ^/api/auth/login$, roles: PUBLIC_ACCESS, methods: [POST] }
+        - { path: ^/api/auth/refresh, roles: PUBLIC_ACCESS, methods: [POST] }
         - { path: ^/api/auth/register$, roles: PUBLIC_ACCESS, methods: [POST] }
         - { path: ^/api/auth/verify-code$, roles: PUBLIC_ACCESS, methods: [POST] }
         - { path: ^/api/auth/login-code$, roles: PUBLIC_ACCESS, methods: [POST] }

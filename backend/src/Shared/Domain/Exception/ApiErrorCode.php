@@ -17,6 +17,8 @@ enum ApiErrorCode: string
     case AUTH_INVALID_CODE = 'AUTH_INVALID_CODE';
     case AUTH_INVALID_TOKEN = 'AUTH_INVALID_TOKEN';
     case AUTH_INVALID_CREDENTIALS = 'AUTH_INVALID_CREDENTIALS';
+    case AUTH_REFRESH_TOKEN_MISSING = 'AUTH_REFRESH_TOKEN_MISSING';
+    case AUTH_REFRESH_TOKEN_INVALID = 'AUTH_REFRESH_TOKEN_INVALID';
     case AUTH_USER_NOT_FOUND = 'AUTH_USER_NOT_FOUND';
     case AUTH_USER_ALREADY_EXISTS = 'AUTH_USER_ALREADY_EXISTS';
     case AUTH_USER_INACTIVE = 'AUTH_USER_INACTIVE';
@@ -40,6 +42,8 @@ enum ApiErrorCode: string
             self::AUTH_INVALID_CODE => 'El código es incorrecto o ha caducado.',
             self::AUTH_INVALID_TOKEN => 'El token proporcionado no existe o ha expirado.',
             self::AUTH_INVALID_CREDENTIALS => 'Credenciales incorrectas.',
+            self::AUTH_REFRESH_TOKEN_MISSING => 'No se ha proporcionado la cookie con el refresh token.',
+            self::AUTH_REFRESH_TOKEN_INVALID => 'El refresh token es inválido o ha expirado.',
             self::AUTH_USER_NOT_FOUND => 'Usuario no encontrado.',
             self::AUTH_USER_ALREADY_EXISTS => 'Email ya registrado en el sistema.',
             self::AUTH_USER_INACTIVE => 'La cuenta de usuario no está activa.',
@@ -57,16 +61,19 @@ enum ApiErrorCode: string
             self::HTTP_ERROR,
             self::INVALID_JSON => 400,
 
-            // 401 Unauthorized: Cuando las credenciales (código o token) fallan.
+            // 401 Unauthorized
             self::AUTH_INVALID_CODE,
             self::AUTH_INVALID_TOKEN,
-            self::AUTH_INVALID_CREDENTIALS => 401,
+            self::AUTH_INVALID_CREDENTIALS,
+            self::AUTH_REFRESH_TOKEN_MISSING,
+            self::AUTH_REFRESH_TOKEN_INVALID => 401,
 
-            // 403 Forbidden: El usuario existe pero tiene el paso prohibido (inactivo).
+
+            // 403 Forbidden
             self::ACCESS_DENIED,
             self::AUTH_USER_INACTIVE => 403,
 
-            // 404 Not Found: Recurso no encontrado.
+            // 404 Not Found
             self::RESOURCE_NOT_FOUND,
             self::AUTH_USER_NOT_FOUND => 404,
 

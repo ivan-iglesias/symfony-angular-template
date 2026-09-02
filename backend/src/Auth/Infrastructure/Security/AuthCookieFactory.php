@@ -7,9 +7,6 @@ use Symfony\Component\HttpFoundation\Cookie;
 
 final readonly class AuthCookieFactory implements AuthCookieFactoryInterface
 {
-    private const REFRESH_TOKEN_COOKIE_NAME = 'refresh_token';
-    private const AUTH_PATH = '/api/auth';
-
     public function __construct(
         private int $ttlSeconds
     ) {}
@@ -32,7 +29,7 @@ final readonly class AuthCookieFactory implements AuthCookieFactoryInterface
         return Cookie::create(
             name: self::REFRESH_TOKEN_COOKIE_NAME,
             value: '',
-            expire: 1,
+            expire: 1, // Caduca la cookie de forma inmediata en el navegador
             path: self::AUTH_PATH,
             secure: true,
             httpOnly: true,

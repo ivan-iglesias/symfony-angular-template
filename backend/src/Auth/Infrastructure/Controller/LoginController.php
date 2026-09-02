@@ -89,9 +89,7 @@ final class LoginController extends AbstractController
 
         $response = ApiResponse::success($normalizedData);
 
-        $cookie = $this->cookieFactory->createRefreshTokenCookie(
-            $responseDto->refreshToken
-        );
+        $cookie = $this->cookieFactory->createRefreshTokenCookie($responseDto->refreshToken);
 
         $response->headers->setCookie($cookie);
 

@@ -58,7 +58,7 @@ final readonly class PasswordlessLoginVerifyAction
         ]);
 
         return AuthResponse::create(
-            token: $accessToken,
+            accessToken: $accessToken,
             refreshToken: $refreshToken,
             user: $user
         );

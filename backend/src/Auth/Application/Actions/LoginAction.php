@@ -35,7 +35,7 @@ final readonly class LoginAction
         ]);
 
         return AuthResponse::create(
-            token: $accessToken,
+            accessToken: $accessToken,
             refreshToken: $refreshToken,
             user: $user
         );
