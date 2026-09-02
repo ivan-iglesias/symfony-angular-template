@@ -3,13 +3,16 @@
 namespace App\Shared\Infrastructure\Service;
 
 use App\Shared\Domain\Exception\ApiErrorCode;
+use App\Shared\Domain\Service\IdempotencyServiceInterface;
 use App\Shared\Infrastructure\Response\ApiResponse;
 use Psr\Cache\CacheItemPoolInterface;
 use Symfony\Component\HttpFoundation\Response;
 
-class IdempotencyService
+final readonly class IdempotencyService implements IdempotencyServiceInterface
 {
-    public function __construct(private readonly CacheItemPoolInterface $cache) {}
+    public function __construct(
+        private CacheItemPoolInterface $cache
+    ) {}
 
     public function getSavedResponse(string $key, string $fingerprint): ?Response
     {
