@@ -14,7 +14,7 @@ use Symfony\Component\Console\Style\SymfonyStyle;
     name: 'auth:users:purge',
     description: 'Elimina usuarios que no activaron su cuenta tras X días',
 )]
-class PurgeInactiveUsersCommand extends Command
+final class PurgeInactiveUsersCommand extends Command
 {
     public function __construct(
         private UserRepositoryInterface $userRepository

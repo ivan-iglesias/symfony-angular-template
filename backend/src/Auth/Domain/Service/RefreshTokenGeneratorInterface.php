@@ -11,4 +11,9 @@ interface RefreshTokenGeneratorInterface
      * Devuelve el string del token generado.
      */
     public function createForUser(UserInterface $user): string;
+
+    /**
+     * Revoca todos los refresh tokens de un usuario.
+     */
+    public function revokeAllForUser(UserInterface $user): void;
 }

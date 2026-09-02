@@ -26,4 +26,17 @@ final readonly class RedisRefreshTokenGenerator implements RefreshTokenGenerator
 
         return $tokenString;
     }
+
+    public function revokeAllForUser(UserInterface $user): void
+    {
+        $userSetKey = self::USER_SET_PREFIX . $user->getUserIdentifier();
+
+        $tokens = $this->redis->sMembers($userSetKey);
+
+        if (!empty($tokens)) {
+            $this->redis->del(...$tokens);
+        }
+
+        $this->redis->del([$userSetKey]);
+    }
 }

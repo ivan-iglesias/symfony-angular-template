@@ -13,7 +13,7 @@ use Symfony\Component\Console\Style\SymfonyStyle;
     name: 'auth:tokens:clean',
     description: 'Elimina los tokens de seguridad que han expirado',
 )]
-class CleanExpiredTokensCommand extends Command
+final class CleanExpiredTokensCommand extends Command
 {
     public function __construct(
         private SecurityTokenRepositoryInterface $tokenRepository
