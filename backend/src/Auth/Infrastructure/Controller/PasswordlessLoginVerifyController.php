@@ -12,12 +12,14 @@ use OpenApi\Attributes as OA;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Serializer\SerializerInterface;
 
 final class PasswordlessLoginVerifyController extends AbstractController
 {
     public function __construct(
         private readonly PasswordlessLoginVerifyAction $action,
-        private readonly AuthCookieFactoryInterface $cookieFactory
+        private readonly AuthCookieFactoryInterface $cookieFactory,
+        private readonly SerializerInterface $serializer
     ) { }
 
     #[Route('/api/auth/login-code/verify', name: 'api_passwordless_login_verify', methods: ['POST'])]
@@ -33,7 +35,14 @@ final class PasswordlessLoginVerifyController extends AbstractController
         responses: [
             new OA\Response(
                 response: 200,
-                description: 'Autenticación exitosa',
+                description: 'Autenticación exitosa. Retorna el access_token en el body y setea la cookie HTTP-Only con el refresh_token',
+                headers: [
+                    new OA\Header(
+                        header: 'Set-Cookie',
+                        description: 'Cookie HTTP-Only con el refresh token gestionado en Redis',
+                        schema: new OA\Schema(type: 'string', example: 'REFRESH_TOKEN=2d5c8b7f74...; Path=/api/auth; Secure; HttpOnly; SameSite=Strict')
+                    )
+                ],
                 content: new OA\JsonContent(ref: new Model(type: AuthResponse::class))
             ),
             new OA\Response(
@@ -74,7 +83,9 @@ final class PasswordlessLoginVerifyController extends AbstractController
     {
         $responseDto = $this->action->execute($input);
 
-        $response = ApiResponse::success($responseDto);
+        $normalizedData = $this->serializer->normalize($responseDto);
+
+        $response = ApiResponse::success($normalizedData);
 
         $cookie = $this->cookieFactory->createRefreshTokenCookie(
             $responseDto->refreshToken
