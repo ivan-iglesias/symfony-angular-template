@@ -8,6 +8,10 @@ Proporciona herramientas para el hash de contraseñas (encriptarlas), el manejo 
 
 Implementa el estándar JWT (JSON Web Token). Cuando un usuario se loguea con éxito, este bundle genera una cadena de texto larga y firmada (el token).
 
+#### gesdinet/jwt-refresh-token-bundle
+
+Gestiona la persistencia y renovación de la sesión. Se encarga de almacenar, validar, rotar e invalidar las claves de refresco de larga duración en base de datos.
+
 #### doctrine/orm
 
 Te permite hablar con la base de datos usando objetos de PHP en lugar de escribir SQL a mano constantemente.

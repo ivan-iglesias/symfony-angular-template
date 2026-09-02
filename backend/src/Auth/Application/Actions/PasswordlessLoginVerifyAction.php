@@ -4,9 +4,10 @@ namespace App\Auth\Application\Actions;
 
 use App\Auth\Application\DTO\AuthResponse;
 use App\Auth\Application\DTO\PasswordlessLoginVerifyInput;
-use App\Auth\Domain\Repository\UserRepositoryInterface;
-use App\Auth\Domain\Repository\SecurityTokenRepositoryInterface;
 use App\Auth\Domain\Enum\SecurityTokenType;
+use App\Auth\Domain\Repository\SecurityTokenRepositoryInterface;
+use App\Auth\Domain\Repository\UserRepositoryInterface;
+use App\Auth\Domain\Service\RefreshTokenGeneratorInterface;
 use App\Shared\Domain\Exception\ApiErrorCode;
 use App\Shared\Domain\Exception\BusinessException;
 use Lexik\Bundle\JWTAuthenticationBundle\Services\JWTTokenManagerInterface;
@@ -18,6 +19,7 @@ final readonly class PasswordlessLoginVerifyAction
         private readonly UserRepositoryInterface $userRepository,
         private readonly SecurityTokenRepositoryInterface $tokenRepository,
         private readonly JWTTokenManagerInterface $jwtManager,
+        private readonly RefreshTokenGeneratorInterface $refreshTokenGenerator,
         private readonly LoggerInterface $logger
     ) {}
 
@@ -45,12 +47,20 @@ final readonly class PasswordlessLoginVerifyAction
             throw new BusinessException(ApiErrorCode::AUTH_INVALID_CODE);
         }
 
-        $token = $this->jwtManager->create($user);
+        // JWT Access Token
+        $accessToken = $this->jwtManager->create($user);
+
+        // Refresh Token
+        $refreshToken = $this->refreshTokenGenerator->createForUser($user);
 
         $this->logger->info('User logged in via security code', [
             'email' => $user->getEmail()
         ]);
 
-        return AuthResponse::fromUser($token, $user);
+        return AuthResponse::create(
+            token: $accessToken,
+            refreshToken: $refreshToken,
+            user: $user
+        );
     }
 }

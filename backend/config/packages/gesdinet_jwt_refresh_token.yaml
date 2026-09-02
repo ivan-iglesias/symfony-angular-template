@@ -1,0 +1,4 @@
+gesdinet_jwt_refresh_token:
+    ttl: '%auth.refresh_token_ttl%'
+    refresh_token_class: Gesdinet\JWTRefreshTokenBundle\Entity\RefreshToken
+    manager_type: custom

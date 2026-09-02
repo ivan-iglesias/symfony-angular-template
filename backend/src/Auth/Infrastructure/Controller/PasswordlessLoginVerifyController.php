@@ -5,6 +5,7 @@ namespace App\Auth\Infrastructure\Controller;
 use App\Auth\Application\Actions\PasswordlessLoginVerifyAction;
 use App\Auth\Application\DTO\AuthResponse;
 use App\Auth\Application\DTO\PasswordlessLoginVerifyInput;
+use App\Auth\Domain\Service\AuthCookieFactoryInterface;
 use App\Shared\Infrastructure\Response\ApiResponse;
 use Nelmio\ApiDocBundle\Attribute\Model;
 use OpenApi\Attributes as OA;
@@ -16,6 +17,7 @@ final class PasswordlessLoginVerifyController extends AbstractController
 {
     public function __construct(
         private readonly PasswordlessLoginVerifyAction $action,
+        private readonly AuthCookieFactoryInterface $cookieFactory
     ) { }
 
     #[Route('/api/auth/login-code/verify', name: 'api_passwordless_login_verify', methods: ['POST'])]
@@ -72,6 +74,14 @@ final class PasswordlessLoginVerifyController extends AbstractController
     {
         $responseDto = $this->action->execute($input);
 
-        return ApiResponse::success($responseDto);
+        $response = ApiResponse::success($responseDto);
+
+        $cookie = $this->cookieFactory->createRefreshTokenCookie(
+            $responseDto->refreshToken
+        );
+
+        $response->headers->setCookie($cookie);
+
+        return $response;
     }
 }

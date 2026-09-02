@@ -5,6 +5,7 @@ namespace App\Auth\Infrastructure\Controller;
 use App\Auth\Application\Actions\LoginAction;
 use App\Auth\Application\DTO\AuthResponse;
 use App\Auth\Application\DTO\LoginInput;
+use App\Auth\Domain\Service\AuthCookieFactoryInterface;
 use App\Shared\Infrastructure\Response\ApiResponse;
 use App\Shared\Infrastructure\Security\RateLimiter\RateLimiterService;
 use Nelmio\ApiDocBundle\Attribute\Model;
@@ -12,12 +13,15 @@ use OpenApi\Attributes as OA;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Serializer\SerializerInterface;
 
 final class LoginController extends AbstractController
 {
     public function __construct(
         private readonly LoginAction $action,
-        private readonly RateLimiterService $rateLimiter
+        private readonly RateLimiterService $rateLimiter,
+        private readonly AuthCookieFactoryInterface $cookieFactory,
+        private readonly SerializerInterface $serializer
     ) {}
 
     #[Route('/api/auth/login', name: 'api_login', methods: ['POST'])]
@@ -32,7 +36,14 @@ final class LoginController extends AbstractController
         responses: [
             new OA\Response(
                 response: 200,
-                description: 'Autenticación exitosa',
+                description: 'Autenticación exitosa. Retorna el access_token en el body y setea la cookie HTTP-Only con el refresh_token',
+                headers: [
+                    new OA\Header(
+                        header: 'Set-Cookie',
+                        description: 'Cookie HTTP-Only',
+                        schema: new OA\Schema(type: 'string', example: 'REFRESH_TOKEN=2d5c8b7f74...; Path=/api/auth; Secure; HttpOnly; SameSite=Strict')
+                    )
+                ],
                 content: new OA\JsonContent(ref: new Model(type: AuthResponse::class))
             ),
             new OA\Response(
@@ -74,6 +85,16 @@ final class LoginController extends AbstractController
 
         $responseDto = $this->action->execute($input);
 
-        return ApiResponse::success($responseDto);
+        $normalizedData = $this->serializer->normalize($responseDto);
+
+        $response = ApiResponse::success($normalizedData);
+
+        $cookie = $this->cookieFactory->createRefreshTokenCookie(
+            $responseDto->refreshToken
+        );
+
+        $response->headers->setCookie($cookie);
+
+        return $response;
     }
 }
