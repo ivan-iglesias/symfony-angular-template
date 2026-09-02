@@ -5,8 +5,35 @@ nelmio_api_doc:
     documentation:
         info:
             title: API
-            description: Documentación oficial de la plataforma
             version: 1.0.0
+            description: |
+                ### Estructura Estándar de Respuestas
+                Todas las respuestas de esta API (éxito o error) devuelven el mismo esquema JSON:
+
+                ```json
+                {
+                  "code": "STRING",
+                  "message": "STRING",
+                  "data": MIXED|null
+                }
+                ```
+
+                ---
+
+                ### Catálogo global de códigos de error generales (`code`)
+
+                | Código de Error (`code`) | HTTP Status | Descripción |
+                | :--- | :---: | :--- |
+                | `HTTP_ERROR` | 400 | Ha ocurrido un error en la petición HTTP. |
+                | `INVALID_JSON` | 400 | El cuerpo de la petición contiene un JSON inválido o mal formado. |
+                | `ACCESS_DENIED` | 403 | Acceso denegado al recurso solicitado. |
+                | `RESOURCE_NOT_FOUND` | 404 | El recurso solicitado no existe. |
+                | `METHOD_NOT_ALLOWED` | 405 | Método HTTP no permitido para esta ruta. |
+                | `IDEMPOTENCY_IN_PROGRESS` | 409 | Has superado el límite de peticiones permitidas por minuto. |
+                | `VALIDATION_ERROR` | 422 | Error de validación en los campos de la petición. |
+                | `IDEMPOTENCY_KEY_REUSED_WITH_DIFFERENT_PAYLOAD` | 422 | La Idempotency-Key ya fue usada con un payload diferente. |
+                | `RESOURCE_LOCKED` | 423 | La solicitud ya se está procesando en otra sesión. |
+                | `TOO_MANY_REQUESTS` | 429 | Has superado el límite de peticiones permitidas por minuto. |
         components:
             securitySchemes:
                 bearerAuth:

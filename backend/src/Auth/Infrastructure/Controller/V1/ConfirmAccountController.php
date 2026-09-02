@@ -14,7 +14,7 @@ final class ConfirmAccountController extends AbstractController
         private readonly ConfirmAction $confirmAction,
     ) {}
 
-    #[Route('/api/v1/auth/confirm/{token}', name: 'api_auth_confirm', methods: ['GET'])]
+    #[Route('/api/v1/auth/confirm/{token}', name: 'api_v1_auth_confirm', methods: ['GET'])]
     #[OA\Get(
         path: '/api/v1/auth/confirm/{token}',
         summary: 'Confirma la cuenta de un usuario mediante un token de email',
@@ -31,11 +31,11 @@ final class ConfirmAccountController extends AbstractController
         responses: [
             new OA\Response(
                 response: 200,
-                description: 'Cuenta activada correctamente'
+                description: 'SUCCESS - Cuenta activada correctamente'
             ),
             new OA\Response(
-                response: 404,
-                description: 'Token inválido o expirado'
+                response: 401,
+                description: 'AUTH_INVALID_TOKEN - Token inválido o expirado'
             )
         ]
     )]

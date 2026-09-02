@@ -22,7 +22,7 @@ final class PasswordlessLoginVerifyController extends AbstractController
         private readonly SerializerInterface $serializer
     ) { }
 
-    #[Route('/api/v1/auth/login-code/verify', name: 'api_passwordless_login_verify', methods: ['POST'])]
+    #[Route('/api/v1/auth/login-code/verify', name: 'api_v1_passwordless_login_verify', methods: ['POST'])]
     #[OA\Post(
         path: '/api/v1/auth/login-code/verify',
         summary: 'Verifica el código de acceso y devuelve el token JWT',
@@ -35,48 +35,16 @@ final class PasswordlessLoginVerifyController extends AbstractController
         responses: [
             new OA\Response(
                 response: 200,
-                description: 'Autenticación exitosa. Retorna el access_token en el body y setea la cookie HTTP-Only con el refresh_token',
-                headers: [
-                    new OA\Header(
-                        header: 'Set-Cookie',
-                        description: 'Cookie HTTP-Only con el refresh token gestionado en Redis',
-                        schema: new OA\Schema(type: 'string', example: 'REFRESH_TOKEN=2d5c8b7f74...; Path=/api/v1/auth; Secure; HttpOnly; SameSite=Strict')
-                    )
-                ],
-                content: new OA\JsonContent(ref: new Model(type: AuthResponse::class))
+                description: 'SUCCESS - Autenticación exitosa. "access_token" en el body y setea la cookie HTTP-Only con el "refresh_token"'
             ),
             new OA\Response(
                 response: 401,
-                description: 'Error de negocio (Código inválido o expirado)',
-                content: new OA\JsonContent(
-                    properties: [
-                        new OA\Property(property: 'code', type: 'string', example: 'AUTH_INVALID_CODE'),
-                        new OA\Property(property: 'message', type: 'string', example: 'El código es incorrecto o ha caducado.')
-                    ]
-                )
+                description: 'AUTH_INVALID_CODE - Código de validación incorrecto o caducado'
             ),
             new OA\Response(
-                response: 422,
-                description: 'Error de validación de datos',
-                content: new OA\JsonContent(
-                    properties: [
-                        new OA\Property(
-                            property: 'errors',
-                            type: 'object',
-                            example: ['code' => 'El código debe tener exactamente 5 dígitos']
-                        )
-                    ]
-                )
+                response: 404,
+                description: 'AUTH_USER_NOT_FOUND - Usuario no encontrado.'
             ),
-            new OA\Response(
-                response: 500,
-                description: 'Error crítico del servidor',
-                content: new OA\JsonContent(
-                    properties: [
-                        new OA\Property(property: 'error', type: 'string', example: 'Ha ocurrido un error inesperado.')
-                    ]
-                )
-            )
         ]
     )]
     public function __invoke(Request $request, PasswordlessLoginVerifyInput $input): ApiResponse

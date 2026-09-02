@@ -18,7 +18,7 @@ final class LogoutController extends AbstractController
         private readonly string $cookieName = AuthCookieFactoryInterface::REFRESH_TOKEN_COOKIE_NAME
     ) {}
 
-    #[Route('/api/v1/auth/logout', name: 'api_auth_logout', methods: ['POST'])]
+    #[Route('/api/v1/auth/logout', name: 'api_v1_auth_logout', methods: ['POST'])]
     #[OA\Post(
         path: '/api/v1/auth/logout',
         summary: 'Cierra la sesión destruyendo el Refresh Token en Redis y expirando la cookie HTTP-Only',
@@ -27,7 +27,7 @@ final class LogoutController extends AbstractController
         responses: [
             new OA\Response(
                 response: 200,
-                description: 'Sesión cerrada correctamente y cookie eliminada del navegador.'
+                description: 'SUCCESS - Sesión cerrada correctamente y cookie eliminada del navegador.'
             )
         ]
     )]

@@ -17,7 +17,7 @@ final class PasswordlessLoginController extends AbstractController
         private readonly PasswordlessLoginAction $action,
     ) { }
 
-    #[Route('/api/v1/auth/login-code', name: 'api_passwordless_login', methods: ['POST'])]
+    #[Route('/api/v1/auth/login-code', name: 'api_v1_passwordless_login', methods: ['POST'])]
     #[OA\Post(
         path: '/api/v1/auth/login-code',
         summary: 'Solicita un código de acceso de 5 dígitos vía email',
@@ -29,21 +29,7 @@ final class PasswordlessLoginController extends AbstractController
         responses: [
             new OA\Response(
                 response: 200,
-                description: 'Solicitud procesada',
-                content: new OA\JsonContent(
-                    properties: [
-                        new OA\Property(property: 'message', type: 'string', example: 'Si el email existe...')
-                    ]
-                )
-            ),
-            new OA\Response(
-                response: 422,
-                description: 'Error de validación',
-                content: new OA\JsonContent(
-                    properties: [
-                        new OA\Property(property: 'errors', type: 'object', example: ['email' => 'Email inválido'])
-                    ]
-                )
+                description: 'SUCCESS - Solicitud procesada, independientemente de si el usuario existe o no.'
             )
         ]
     )]

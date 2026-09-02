@@ -21,7 +21,7 @@ final class RefreshTokenController extends AbstractController
         private readonly string $cookieName = AuthCookieFactoryInterface::REFRESH_TOKEN_COOKIE_NAME
     ) {}
 
-    #[Route('/api/v1/auth/refresh', name: 'api_auth_refresh', methods: ['POST'])]
+    #[Route('/api/v1/auth/refresh', name: 'api_v1_auth_refresh', methods: ['POST'])]
     #[OA\Post(
         path: '/api/v1/auth/refresh',
         summary: 'Renueva el JWT access_token leyendo la cookie HTTP-Only existente',
@@ -30,20 +30,16 @@ final class RefreshTokenController extends AbstractController
         responses: [
             new OA\Response(
                 response: 200,
-                description: 'Token JWT renovado con éxito. Mantiene la cookie HTTP-Only previa sin alterarla.',
-                content: new OA\JsonContent(ref: new Model(type: RefreshResponse::class))
+                description: 'SUCCESS - Token JWT renovado con éxito. Mantiene la cookie HTTP-Only previa sin alterarla.'
             ),
             new OA\Response(
                 response: 401,
-                description: 'Refresh token ausente, inválido o expirado en Redis',
-                content: new OA\JsonContent(
-                    properties: [
-                        new OA\Property(property: 'code', type: 'string', example: 'AUTH_REFRESH_TOKEN_INVALID'),
-                        new OA\Property(property: 'message', type: 'string', example: 'El refresh token es inválido o ha expirado.'),
-                        new OA\Property(property: 'data', type: 'mixed', example: null)
-                    ]
-                )
-            )
+                description: 'AUTH_REFRESH_TOKEN_MISSING / AUTH_REFRESH_TOKEN_INVALID - El refresh token es inválido o ha expirado.'
+            ),
+            new OA\Response(
+                response: 404,
+                description: 'AUTH_USER_NOT_FOUND - Usuario no encontrado.'
+            ),
         ]
     )]
     public function __invoke(Request $request): ApiResponse

@@ -17,7 +17,7 @@ final class RegisterController extends AbstractController
         private readonly RegisterAction $action,
     ) {}
 
-    #[Route('/api/v1/auth/register', name: 'api_auth_register', methods: ['POST'])]
+    #[Route('/api/v1/auth/register', name: 'api_v1_auth_register', methods: ['POST'])]
     #[OA\Post(
         path: '/api/v1/auth/register',
         summary: 'Registra un nuevo usuario en la plataforma',
@@ -27,11 +27,13 @@ final class RegisterController extends AbstractController
         ),
         responses: [
             new OA\Response(
-                response: 201,
-                description: 'Usuario creado con éxito. Se ha enviado un email de confirmación.'
+                response: 200,
+                description: 'SUCCESS - Usuario creado con éxito. Se envia email de confirmación.'
             ),
-            new OA\Response(response: 422, description: 'Error de validación'),
-            new OA\Response(response: 400, description: 'El email ya está registrado')
+            new OA\Response(
+                response: 409,
+                description: 'AUTH_USER_ALREADY_EXISTS - Usuario ya registrado.'
+            ),
         ]
     )]
     #[Idempotent]

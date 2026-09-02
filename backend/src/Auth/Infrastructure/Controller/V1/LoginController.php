@@ -24,7 +24,7 @@ final class LoginController extends AbstractController
         private readonly SerializerInterface $serializer
     ) {}
 
-    #[Route('/api/v1/auth/login', name: 'api_login', methods: ['POST'])]
+    #[Route('/api/v1/auth/login', name: 'api_v1_login', methods: ['POST'])]
     #[OA\Post(
         path: '/api/v1/auth/login',
         summary: 'Inicia sesión para obtener el token JWT',
@@ -36,46 +36,15 @@ final class LoginController extends AbstractController
         responses: [
             new OA\Response(
                 response: 200,
-                description: 'Autenticación exitosa. Retorna el access_token en el body y setea la cookie HTTP-Only con el refresh_token',
-                headers: [
-                    new OA\Header(
-                        header: 'Set-Cookie',
-                        description: 'Cookie HTTP-Only',
-                        schema: new OA\Schema(type: 'string', example: 'REFRESH_TOKEN=2d5c8b7f74...; Path=/api/v1/auth; Secure; HttpOnly; SameSite=Strict')
-                    )
-                ],
-                content: new OA\JsonContent(ref: new Model(type: AuthResponse::class))
+                description: 'SUCCESS - Autenticación exitosa. "access_token" en el body y setea la cookie HTTP-Only con el "refresh_token"'
             ),
             new OA\Response(
                 response: 401,
-                description: 'Credenciales inválidas',
-                content: new OA\JsonContent(
-                    properties: [
-                        new OA\Property(property: 'error', type: 'string', example: 'Credenciales inválidas')
-                    ]
-                )
+                description: 'AUTH_INVALID_CREDENTIALS - Credenciales inválidas',
             ),
             new OA\Response(
                 response: 422,
-                description: 'Error de validación en los datos de entrada',
-                content: new OA\JsonContent(
-                    properties: [
-                        new OA\Property(
-                            property: 'errors',
-                            type: 'object',
-                            example: ['email' => 'El formato del email no es válido.']
-                        )
-                    ]
-                )
-            ),
-            new OA\Response(
-                response: 500,
-                description: 'Error crítico del servidor',
-                content: new OA\JsonContent(
-                    properties: [
-                        new OA\Property(property: 'error', type: 'string', example: 'Ha ocurrido un error inesperado.')
-                    ]
-                )
+                description: 'AUTH_USER_INACTIVE - La cuenta de usuario no está activa',
             )
         ]
     )]
