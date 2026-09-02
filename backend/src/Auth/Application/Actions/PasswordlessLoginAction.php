@@ -7,8 +7,8 @@ use App\Auth\Domain\Entity\SecurityToken;
 use App\Auth\Domain\Enum\SecurityTokenType;
 use App\Auth\Domain\Repository\SecurityTokenRepositoryInterface;
 use App\Auth\Domain\Repository\UserRepositoryInterface;
-use App\Auth\Domain\Service\LoginCodeGenerator;
 use App\Auth\Domain\Service\UserRegistrationNotifierInterface;
+use App\Shared\Domain\Service\CodeGeneratorInterface;
 use Psr\Log\LoggerInterface;
 
 final readonly class PasswordlessLoginAction
@@ -16,7 +16,7 @@ final readonly class PasswordlessLoginAction
     public function __construct(
         private readonly UserRepositoryInterface $userRepository,
         private readonly SecurityTokenRepositoryInterface $tokenRepository,
-        private readonly LoginCodeGenerator $codeGenerator,
+        private readonly CodeGeneratorInterface $codeGenerator,
         private readonly UserRegistrationNotifierInterface $notifier,
         private readonly LoggerInterface $logger
     ) {}
@@ -27,7 +27,7 @@ final readonly class PasswordlessLoginAction
 
         if (!$user || !$user->isActive()) return;
 
-        $code = $this->codeGenerator->generate();
+        $code = $this->codeGenerator->generateNumeric();
 
         $token = new SecurityToken(
             $user,
