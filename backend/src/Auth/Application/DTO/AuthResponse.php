@@ -11,6 +11,7 @@ final readonly class AuthResponse
     public function __construct(
         #[SerializedName('access_token')]
         public readonly string $accessToken,
+        #[Ignore]
         public readonly string $email,
         public readonly array $roles,
 
