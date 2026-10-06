@@ -1,3 +1,5 @@
+name: ${PROJECT_NAME}
+
 services:
   database:
     image: postgres:16-alpine
